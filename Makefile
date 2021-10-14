@@ -6,7 +6,7 @@ LOOM = /home/patrick/repos/loom/build/loom
 ILP_TIMEOUT = 43200 # timeout = 12 hours
 ILP_CACHE_DIR = /tmp
 
-GLOB_ARGS = --output-stats=1 --in-station-crossing-penalty-factor-same-seg=12 --in-station-crossing-penalty-factor-diff-seg=3 --diff-seg-cross-penalty-factor=1 --same-seg-cross-penalty-factor=4
+GLOB_ARGS = --ilp-time-limit=$(ILP_TIMEOUT) --output-stats=1 --in-station-crossing-penalty-factor-same-seg=12 --in-station-crossing-penalty-factor-diff-seg=3 --diff-seg-cross-penalty-factor=1 --same-seg-cross-penalty-factor=4
 
 GLOB_ARGS_NOSEP = --separation-penalty-factor=0 --in-station-separation-penalty-factor=0
 
@@ -36,9 +36,9 @@ EVAL_ILP_SEP_UNTANGLED := $(patsubst %, results/%/ilp-sep/untangled/res.json, $(
 
 EVAL_GREEDY := $(patsubst %, results/%/greedy/raw/res.json, $(DATASETS))
 EVAL_GREEDY_SEP := $(patsubst %, results/%/greedy-sep/raw/res.json, $(DATASETS))
-EVAL_GREEDY_PRUNED := $(patsubst %, results/%/greedy-pruned/res.json, $(DATASETS))
+EVAL_GREEDY_PRUNED := $(patsubst %, results/%/greedy/pruned/res.json, $(DATASETS))
 EVAL_GREEDY_SEP_PRUNED := $(patsubst %, results/%/greedy-sep/pruned/res.json, $(DATASETS))
-EVAL_GREEDY_UNTANGLED := $(patsubst %, results/%/greedy-untangled/res.json, $(DATASETS))
+EVAL_GREEDY_UNTANGLED := $(patsubst %, results/%/greedy/untangled/res.json, $(DATASETS))
 EVAL_GREEDY_SEP_UNTANGLED := $(patsubst %, results/%/greedy-sep/untangled/res.json, $(DATASETS))
 
 EVAL_GREEDY_LOOKAHEAD := $(patsubst %, results/%/greedy-lookahead/raw/res.json, $(DATASETS))
@@ -202,7 +202,7 @@ results/%/greedy-sep/raw/res.json: datasets/%.json
 	@printf "[%s] Done.\n" "$$(date -Is)"
 
 ### on pruned graph
-results/%/greedy-pruned/res.json: datasets/%.json
+results/%/greedy/pruned/res.json: datasets/%.json
 	@printf "[%s] Calculating results for Greedy w/o separation penality on pruned graph for $< ... \n" "$$(date -Is)"
 	@mkdir -p $(dir $@) # create directory
 	@$(LOOM) $(GLOB_ARGS_PRUNED) $(GLOB_ARGS) $(GLOB_ARGS_NOSEP) --optim-method=greedy < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
@@ -218,7 +218,7 @@ results/%/greedy-sep/pruned/res.json: datasets/%.json
 	@printf "[%s] Done.\n" "$$(date -Is)"
 
 ### on untangled graph
-results/%/greedy-untangled/res.json: datasets/%.json
+results/%/greedy/untangled/res.json: datasets/%.json
 	@printf "[%s] Calculating results for Greedy w/o separation penality on untangled graph for $< ... \n" "$$(date -Is)"
 	@mkdir -p $(dir $@) # create directory
 	@$(LOOM) $(GLOB_ARGS_UNTANGLED)  $(GLOB_ARGS) $(GLOB_ARGS_NOSEP) --optim-method=greedy < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
@@ -508,20 +508,31 @@ hillc-random: $(EVAL_HILLC_RANDOM) $(EVAL_HILLC_RANDOM_SEP) $(EVAL_HILLC_RANDOM_
 
 anneal-random: $(EVAL_ANNEAL_RANDOM) $(EVAL_ANNEAL_RANDOM_SEP) $(EVAL_ANNEAL_RANDOM_PRUNED) $(EVAL_ANNEAL_RANDOM_SEP_PRUNED) $(EVAL_ANNEAL_RANDOM_UNTANGLED) $(EVAL_ANNEAL_RANDOM_SEP_UNTANGLED)
 
-tables/tbl-dataset-overview.tex: greedy
+tables/tbl-dataset-overview.tex: $(EVAL_GREEDY)
 	@mkdir -p tables
-	@python3 script/table.py $(patsubst %, results/%, $(DATASETS)) > $@
+	@python3 script/table.py overview $(patsubst %, results/%, $(DATASETS)) > $@
 
 tables/tbl-dataset-overview.pdf: tables/tbl-dataset-overview.tex
 	@cat script/template.tex > tables/tmp
 	@cat $^ >> tables/tmp
 	@echo "\\\end{document}" >> tables/tmp
-	@pdflatex -output-directory=tables -jobname=tbl-dataset-overview tables/tmp
+	@pdflatex -output-directory=tables -jobname=tbl-dataset-overview tables/tmp > /dev/null
 	@rm tables/tmp
 
+tables/tbl-main-res-time.tex: $(EVAL_GREEDY_LOOKAHEAD_SEP) $(EVAL_HILLC_RANDOM_SEP) $(EVAL_ANNEAL_RANDOM_SEP)
+	@mkdir -p tables
+	@python3 script/table.py main-res-time $(patsubst %, results/%, $(DATASETS)) > $@
+
+tables/tbl-main-res-time.pdf: tables/tbl-main-res-time.tex
+	@cat script/template.tex > tables/tmp
+	@cat $^ >> tables/tmp
+	@echo "\\\end{document}" >> tables/tmp
+	@pdflatex -output-directory=tables -jobname=tbl-main-res-time tables/tmp
+	@rm tables/tmp
 
 help:
 	cat README.md
 
 clean:
 	rm -rf results
+	rm -rf tables

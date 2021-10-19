@@ -85,7 +85,7 @@ def format_msecs(ms):
 
     if ms < 1:
         return "%.1f\Hms" % ms
-    
+
     if ms < 100:
         return "%.0f\Hms" % ms
 
@@ -96,6 +96,13 @@ def format_msecs(ms):
         return "%.0f\Hm" % (ms / (60 * 1000.0))
 
     return "%.0f\Hh" % (ms / (60 * 60 * 1000.0))
+
+def format_approxerr(perfect, approx):
+    if perfect == None or approx == None:
+        return "---"
+
+    return "%.1f" % ((approx - perfect) / perfect)
+
 
 def tbl_overview(results):
     ret = "\\begin{table}\n"
@@ -153,13 +160,52 @@ def tbl_main_res_time(results):
             format_msecs(get(r, "ilp" , "pruned", "avg_solve_time")),
             format_msecs(get(r, "ilp" , "untangled", "avg_solve_time"))
             )
-  
+
     ret += "\\bottomrule"
     ret += "\\end{tabular*}}\n"
     ret += "\\end{table}\n"
 
     return ret
 
+def tbl_main_res_approx_error(results):
+    ret = "\\begin{table}\n"
+    ret += "  \\centering\n"
+    ret += "  \\caption[]{Main results for the approximation errors of a selection of our heuristic methods on all test datasets. \TODO{how are they selected?} \label{TBL:main_results_approx}}\n"
+    ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\normalsize\setlength\\tabcolsep{5pt}\n"
+
+    ret +="  \\begin{tabular*}{1\\textwidth}{@{\\extracolsep{\\fill}} l r r r r r r r r r r r r}\\toprule\n"
+    ret +="    \\method\\hspace{-7pt} & \\GREEDYsf   & \\GREEDYLAsf & \\GREEDYLAsf  & \\HILGRsf & \\HILGRsf  & \\ANNGRsf  & \\ANNGRsf   & \\HILsf  & \\HILsf   & \\ANNsf & \\ANNsf  \\\\[-1.5mm]\n"
+    ret +="    \\graph\\hspace{-7pt}   & \\basic & \\basic       & \\untang & \\basic & \\untang & \\basic & \\untang & \\basic & \\untang   & \\basic & \\untang    \\\\[0.7mm]\\cmidrule{2-12}\n"
+
+    sort = []
+    for dataset_id in results:
+        sort.append(dataset_id)
+
+    sort = sorted(sort, key=lambda d : results[d]["greedy-lookahead-sep"]["raw"]["input_num_edges"])
+
+    for dataset_id in sort:
+        r = results[dataset_id]
+        optim = get(r, "ilp-sep" , "untangled", "avg_score")
+
+        ret += "%s & %s  & %s &  %s &  %s  &  %s  &  %s  &  %s  &  %s  &  %s &  %s & %s\\\\\n" % (DATASET_LABELS_SHORT[dataset_id],
+            format_approxerr(optim, get(r, "greedy-sep" , "raw", "avg_score")),
+            format_approxerr(optim, get(r, "greedy-lookahead-sep" , "raw", "avg_score")),
+            format_approxerr(optim, get(r, "greedy-lookahead-sep" , "untangled", "avg_score")),
+            format_approxerr(optim, get(r, "hillc-sep" , "raw", "avg_score")),
+            format_approxerr(optim, get(r, "hillc-sep" , "untangled", "avg_score")),
+            format_approxerr(optim, get(r, "anneal-sep" , "raw", "avg_score")),
+            format_approxerr(optim, get(r, "anneal-sep" , "untangled", "avg_score")),
+            format_approxerr(optim, get(r, "hillc-random-sep" , "raw", "avg_score")),
+            format_approxerr(optim, get(r, "hillc-random-sep" , "untangled", "avg_score")),
+            format_approxerr(optim, get(r, "anneal-random-sep" , "raw", "avg_score")),
+            format_approxerr(optim, get(r, "anneal-random-sep" , "untangled", "avg_score"))
+            )
+
+    ret += "\\bottomrule"
+    ret += "\\end{tabular*}}\n"
+    ret += "\\end{table}\n"
+
+    return ret
 
 def main():
     if len(sys.argv) < 3:
@@ -176,6 +222,9 @@ def main():
 
     if sys.argv[1] == "main-res-time":
         print(tbl_main_res_time(results))
+
+    if sys.argv[1] == "main-res-approx-error":
+        print(tbl_main_res_approx_error(results))
 
 if __name__ == "__main__":
     main()

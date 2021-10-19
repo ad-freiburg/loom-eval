@@ -48,6 +48,9 @@
 
 \usepackage{titlesec}
 
+\newcommand\todo[1]{\textcolor{blue}{[TODO: #1]}}
+\newcommand\TODO[1]{\textcolor{blue}{\small [TODO: #1]}}
+
 \DeclareMathOperator*{\argmin}{\arg\!\min}
 \DeclareMathOperator*{\argmax}{\arg\!\max}
 \DeclareMathOperator*{\TED}{TED}
@@ -111,8 +114,10 @@
 \def\EXHsf{{\footnotesize \EXH\makebox[0mm][l]{$^*$}}}
 \def\HILsf{{\footnotesize \HIL\makebox[0mm][l]{$^*$}}}
 \def\ANNsf{{\footnotesize \ANN\makebox[0mm][l]{$^*$}}}
+\def\GREEDYsf{{\footnotesize \GREEDY\makebox[0mm][l]{$^*$}}}
 \def\GREEDYLAsf{{\footnotesize \GREEDYLA\makebox[0mm][l]{$^*$}}}
-
+\def\HILGRsf{{\footnotesize \begin{tabular}{@{}c@{}}GrLa+\\[-4pt]Hill\makebox[0mm][l]{$^*$}\end{tabular}}}
+	\def\ANNGRsf{{\footnotesize \begin{tabular}{@{}c@{}}GrLa+\\[-4pt]Ann\makebox[0mm][l]{$^*$}\end{tabular}}}
 
 \def\basic{{\footnotesize raw}}
 \def\pruned{{\footnotesize pr/cut}}

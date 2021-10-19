@@ -16,7 +16,7 @@ GLOB_ARGS_RAW = --prune=0 --untangle=0
 
 GLOB_ARGS_PRUNED = --prune=1 --untangle=0
 
-GLOB_ARGS_UNTANGLED = --prune=1 --untangle=1
+GLOB_ARGS_UNTANGLED = --prune=0 --untangle=1
 
 DATASETS = $(basename $(notdir $(wildcard datasets/*.json)))
 
@@ -529,6 +529,18 @@ tables/tbl-main-res-time.pdf: tables/tbl-main-res-time.tex
 	@echo "\\\end{document}" >> tables/tmp
 	@pdflatex -output-directory=tables -jobname=tbl-main-res-time tables/tmp
 	@rm tables/tmp
+
+tables/tbl-main-res-approx-error.tex: $(EVAL_ILP_SEP_UNTANGLED) $(EVAL_GREEDY_SEP) $(EVAL_GREEDY_LOOKAHEAD_SEP) $(EVAL_GREEDY_LOOKAHEAD_SEP_UNTANGLED) $(EVAL_HILLC_SEP_UNTANGLED) $(EVAL_ANNEAL_SEP_UNTANGLED) $(EVAL_HILLC_SEP) $(EVAL_ANNEAL_SEP) $(EVAL_HILLC_RANDOM_SEP_UNTANGLED) $(EVAL_ANNEAL_RANDOM_SEP_UNTANGLED) $(EVAL_HILLC_RANDOM_SEP) $(EVAL_ANNEAL_RANDOM_SEP)
+	@mkdir -p tables
+	@python3 script/table.py main-res-approx-error $(patsubst %, results/%, $(DATASETS)) > $@
+
+tables/tbl-main-res-approx-error.pdf: tables/tbl-main-res-approx-error.tex
+	@cat script/template.tex > tables/tmp
+	@cat $^ >> tables/tmp
+	@echo "\\\end{document}" >> tables/tmp
+	@pdflatex -output-directory=tables -jobname=tbl-main-res-approx-error tables/tmp
+	@rm tables/tmp
+
 
 help:
 	cat README.md

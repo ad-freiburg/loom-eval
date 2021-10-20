@@ -20,19 +20,54 @@ GLOB_ARGS_UNTANGLED = --prune=0 --untangle=1
 
 DATASETS = $(basename $(notdir $(wildcard datasets/*.json)))
 
-EVAL_ILP_BASELINE := $(patsubst %, results/%/ilp-baseline/raw/res.json, $(DATASETS))
-EVAL_ILP_BASELINE_SEP := $(patsubst %, results/%/ilp-baseline-sep/raw/res.json, $(DATASETS))
-EVAL_ILP_BASELINE_PRUNED := $(patsubst %, results/%/ilp-baseline/pruned/res.json, $(DATASETS))
-EVAL_ILP_BASELINE_SEP_PRUNED := $(patsubst %, results/%/ilp-baseline-sep/pruned/res.json, $(DATASETS))
-EVAL_ILP_BASELINE_UNTANGLED := $(patsubst %, results/%/ilp-baseline/untangled/res.json, $(DATASETS))
-EVAL_ILP_BASELINE_SEP_UNTANGLED := $(patsubst %, results/%/ilp-baseline-sep/untangled/res.json, $(DATASETS))
+EVAL_EXH := $(patsubst %, results/%/exh/raw/res.json, $(DATASETS))
+EVAL_EXH_SEP := $(patsubst %, results/%/exh-sep/raw/res.json, $(DATASETS))
+EVAL_EXH_PRUNED := $(patsubst %, results/%/exh/pruned/res.json, $(DATASETS))
+EVAL_EXH_SEP_PRUNED := $(patsubst %, results/%/exh-sep/pruned/res.json, $(DATASETS))
+EVAL_EXH_UNTANGLED := $(patsubst %, results/%/exh/untangled/res.json, $(DATASETS))
+EVAL_EXH_SEP_UNTANGLED := $(patsubst %, results/%/exh-sep/untangled/res.json, $(DATASETS))
 
-EVAL_ILP := $(patsubst %, results/%/ilp/raw/res.json, $(DATASETS))
-EVAL_ILP_SEP := $(patsubst %, results/%/ilp-sep/raw/res.json, $(DATASETS))
-EVAL_ILP_PRUNED := $(patsubst %, results/%/ilp-pruned/res.json, $(DATASETS))
-EVAL_ILP_SEP_PRUNED := $(patsubst %, results/%/ilp-sep/pruned/res.json, $(DATASETS))
-EVAL_ILP_UNTANGLED := $(patsubst %, results/%/ilp-untangled/res.json, $(DATASETS))
-EVAL_ILP_SEP_UNTANGLED := $(patsubst %, results/%/ilp-sep/untangled/res.json, $(DATASETS))
+EVAL_ILP_GLPK_BASELINE := $(patsubst %, results/%/ilp-baseline-glpk/raw/res.json, $(DATASETS))
+EVAL_ILP_GLPK_BASELINE_SEP := $(patsubst %, results/%/ilp-baseline-sep-glpk/raw/res.json, $(DATASETS))
+EVAL_ILP_GLPK_BASELINE_PRUNED := $(patsubst %, results/%/ilp-baseline-glpk/pruned/res.json, $(DATASETS))
+EVAL_ILP_GLPK_BASELINE_SEP_PRUNED := $(patsubst %, results/%/ilp-baseline-sep-glpk/pruned/res.json, $(DATASETS))
+EVAL_ILP_GLPK_BASELINE_UNTANGLED := $(patsubst %, results/%/ilp-baseline-glpk/untangled/res.json, $(DATASETS))
+EVAL_ILP_GLPK_BASELINE_SEP_UNTANGLED := $(patsubst %, results/%/ilp-baseline-sep-glpk/untangled/res.json, $(DATASETS))
+
+EVAL_ILP_GLPK := $(patsubst %, results/%/ilp-glpk/raw/res.json, $(DATASETS))
+EVAL_ILP_GLPK_SEP := $(patsubst %, results/%/ilp-sep-glpk/raw/res.json, $(DATASETS))
+EVAL_ILP_GLPK_PRUNED := $(patsubst %, results/%/ilp-glpk/pruned/res.json, $(DATASETS))
+EVAL_ILP_GLPK_SEP_PRUNED := $(patsubst %, results/%/ilp-sep-glpk/pruned/res.json, $(DATASETS))
+EVAL_ILP_GLPK_UNTANGLED := $(patsubst %, results/%/ilp-untangled-glpk/res.json, $(DATASETS))
+EVAL_ILP_GLPK_SEP_UNTANGLED := $(patsubst %, results/%/ilp-sep-glpk/untangled/res.json, $(DATASETS))
+
+EVAL_ILP_CBC_BASELINE := $(patsubst %, results/%/ilp-baseline-cbc/raw/res.json, $(DATASETS))
+EVAL_ILP_CBC_BASELINE_SEP := $(patsubst %, results/%/ilp-baseline-sep-cbc/raw/res.json, $(DATASETS))
+EVAL_ILP_CBC_BASELINE_PRUNED := $(patsubst %, results/%/ilp-baseline-cbc/pruned/res.json, $(DATASETS))
+EVAL_ILP_CBC_BASELINE_SEP_PRUNED := $(patsubst %, results/%/ilp-baseline-sep-cbc/pruned/res.json, $(DATASETS))
+EVAL_ILP_CBC_BASELINE_UNTANGLED := $(patsubst %, results/%/ilp-baseline-cbc/untangled/res.json, $(DATASETS))
+EVAL_ILP_CBC_BASELINE_SEP_UNTANGLED := $(patsubst %, results/%/ilp-baseline-sep-cbc/untangled/res.json, $(DATASETS))
+
+EVAL_ILP_CBC := $(patsubst %, results/%/ilp-cbc/raw/res.json, $(DATASETS))
+EVAL_ILP_CBC_SEP := $(patsubst %, results/%/ilp-sep-cbc/raw/res.json, $(DATASETS))
+EVAL_ILP_CBC_PRUNED := $(patsubst %, results/%/ilp-cbc/pruned/res.json, $(DATASETS))
+EVAL_ILP_CBC_SEP_PRUNED := $(patsubst %, results/%/ilp-sep-cbc/pruned/res.json, $(DATASETS))
+EVAL_ILP_CBC_UNTANGLED := $(patsubst %, results/%/ilp-untangled-cbc/res.json, $(DATASETS))
+EVAL_ILP_CBC_SEP_UNTANGLED := $(patsubst %, results/%/ilp-sep-cbc/untangled/res.json, $(DATASETS))
+
+EVAL_ILP_BASELINE := $(EVAL_ILP_GLPK_BASELINE) $(EVAL_ILP_CBC_BASELINE)
+EVAL_ILP_BASELINE_SEP := $(EVAL_ILP_GLPK_BASELINE_SEP) $(EVAL_ILP_CBC_BASELINE_SEP)
+EVAL_ILP_BASELINE_PRUNED := $(EVAL_ILP_GLPK_BASELINE_PRUNED)  $(EVAL_ILP_CBC_BASELINE_PRUNED)
+EVAL_ILP_BASELINE_SEP_PRUNED := $(EVAL_ILP_GLPK_BASELINE_SEP_PRUNED) $(EVAL_ILP_CBC_BASELINE_SEP_PRUNED)
+EVAL_ILP_BASELINE_UNTANGLED := $(EVAL_ILP_GLPK_BASELINE_UNTANGLED) $(EVAL_ILP_CBC_BASELINE_UNTANGLED)
+EVAL_ILP_BASELINE_SEP_UNTANGLED := $(EVAL_ILP_GLPK_BASELINE_SEP_UNTANGLED) $(EVAL_ILP_CBC_BASELINE_SEP_UNTANGLED)
+
+EVAL_ILP := $(EVAL_ILP_GLPK) $(EVAL_ILP_CBC)
+EVAL_ILP_SEP := $(EVAL_ILP_GLPK_SEP) $(EVAL_ILP_CBC_SEP)
+EVAL_ILP_PRUNED := $(EVAL_ILP_GLPK_PRUNED) $(EVAL_ILP_CBC_PRUNED)
+EVAL_ILP_SEP_PRUNED := $(EVAL_ILP_GLPK_SEP_PRUNED) $(EVAL_ILP_CBC_SEP_PRUNED)
+EVAL_ILP_UNTANGLED := $(EVAL_ILP_GLPK_UNTANGLED) $(EVAL_ILP_CBC_UNTANGLED)
+EVAL_ILP_SEP_UNTANGLED := $(EVAL_ILP_GLPK_SEP_UNTANGLED) $(EVAL_ILP_CBC_SEP_UNTANGLED)
 
 EVAL_GREEDY := $(patsubst %, results/%/greedy/raw/res.json, $(DATASETS))
 EVAL_GREEDY_SEP := $(patsubst %, results/%/greedy-sep/raw/res.json, $(DATASETS))
@@ -83,49 +118,98 @@ EVAL_ANNEAL_RANDOM_SEP_UNTANGLED := $(patsubst %, results/%/anneal-random-sep/un
 #### BASELINE ILP
 
 ### on raw graph
-results/%/ilp-baseline/raw/res.json: datasets/%.json
-	@printf "[%s] Calculating results for baseline ILP w/o separation penality on raw graph for $< ... \n" "$$(date -Is)"
+results/%/ilp-baseline-glpk/raw/res.json: datasets/%.json
+	@printf "[%s] Calculating results for baseline ILP using GLPK w/o separation penality on raw graph for $< ... \n" "$$(date -Is)"
 	@mkdir -p $(dir $@) # create directory
-	@$(LOOM) $(GLOB_ARGS) $(GLOB_ARGS_RAW) $(GLOB_ARGS_NOSEP) --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+	@$(LOOM) $(GLOB_ARGS) $(GLOB_ARGS_RAW) $(GLOB_ARGS_NOSEP) --ilp-solver=glpk --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
 
 	@printf "[%s] Done.\n" "$$(date -Is)"
 
-results/%/ilp-baseline-sep/raw/res.json: datasets/%.json
-	@printf "[%s] Calculating results for baseline ILP with separation penality on raw graph for $< ... \n" "$$(date -Is)"
+results/%/ilp-baseline-sep-glpk/raw/res.json: datasets/%.json
+	@printf "[%s] Calculating results for baseline ILPP using GLPK with separation penality on raw graph for $< ... \n" "$$(date -Is)"
 	@mkdir -p $(dir $@) # create directory
-	@$(LOOM) $(GLOB_ARGS) $(GLOB_ARGS_RAW) $(GLOB_ARGS_SEP) --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+	@$(LOOM) $(GLOB_ARGS) $(GLOB_ARGS_RAW) $(GLOB_ARGS_SEP) --ilp-solver=glpk --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
 
 	@printf "[%s] Done.\n" "$$(date -Is)"
 
 ### on pruned graph
-results/%/ilp-baseline/pruned/res.json: datasets/%.json
-	@printf "[%s] Calculating results for baseline ILP w/o separation penality on pruned graph for $< ... \n" "$$(date -Is)"
+results/%/ilp-baseline-glpk/pruned/res.json: datasets/%.json
+	@printf "[%s] Calculating results for baseline ILPP using GLPK w/o separation penality on pruned graph for $< ... \n" "$$(date -Is)"
 	@mkdir -p $(dir $@) # create directory
-	@$(LOOM) $(GLOB_ARGS_PRUNED) $(GLOB_ARGS) $(GLOB_ARGS_NOSEP) --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+	@$(LOOM) $(GLOB_ARGS_PRUNED) $(GLOB_ARGS) $(GLOB_ARGS_NOSEP) --ilp-solver=glpk --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
 
 	@printf "[%s] Done.\n" "$$(date -Is)"
 
 
-results/%/ilp-baseline-sep/pruned/res.json: datasets/%.json
-	@printf "[%s] Calculating results for baseline ILP with separation penality on pruned graph for $< ... \n" "$$(date -Is)"
+results/%/ilp-baseline-sep-glpk/pruned/res.json: datasets/%.json
+	@printf "[%s] Calculating results for baseline ILPP using GLPK with separation penality on pruned graph for $< ... \n" "$$(date -Is)"
 	@mkdir -p $(dir $@) # create directory
-	@$(LOOM) $(GLOB_ARGS_PRUNED) $(GLOB_ARGS) $(GLOB_ARGS_SEP) --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+	@$(LOOM) $(GLOB_ARGS_PRUNED) $(GLOB_ARGS) $(GLOB_ARGS_SEP) --ilp-solver=glpk --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
 
 	@printf "[%s] Done.\n" "$$(date -Is)"
 
 ### on untangled graph
-results/%/ilp-baseline/untangled/res.json: datasets/%.json
-	@printf "[%s] Calculating results for baseline ILP w/o separation penality on untangled graph for $< ... \n" "$$(date -Is)"
+results/%/ilp-baseline-glpk/untangled/res.json: datasets/%.json
+	@printf "[%s] Calculating results for baseline ILPP using GLPK w/o separation penality on untangled graph for $< ... \n" "$$(date -Is)"
 	@mkdir -p $(dir $@) # create directory
-	@$(LOOM) $(GLOB_ARGS_UNTANGLED)  $(GLOB_ARGS) $(GLOB_ARGS_NOSEP) --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+	@$(LOOM) $(GLOB_ARGS_UNTANGLED)  $(GLOB_ARGS) $(GLOB_ARGS_NOSEP) --ilp-solver=glpk --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
 
 	@printf "[%s] Done.\n" "$$(date -Is)"
 
 
-results/%/ilp-baseline-sep/untangled/res.json: datasets/%.json
-	@printf "[%s] Calculating results for baseline ILP with separation penality on untangled graph for $< ... \n" "$$(date -Is)"
+results/%/ilp-baseline-sep-glpk/untangled/res.json: datasets/%.json
+	@printf "[%s] Calculating results for baseline ILPP using GLPK with separation penality on untangled graph for $< ... \n" "$$(date -Is)"
 	@mkdir -p $(dir $@) # create directory
-	@$(LOOM) $(GLOB_ARGS_UNTANGLED) $(GLOB_ARGS) $(GLOB_ARGS_SEP) --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+	@$(LOOM) $(GLOB_ARGS_UNTANGLED) $(GLOB_ARGS) $(GLOB_ARGS_SEP) --ilp-solver=glpk --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+######
+
+### on raw graph
+results/%/ilp-baseline-cbc/raw/res.json: datasets/%.json
+	@printf "[%s] Calculating results for baseline ILP using CBC w/o separation penality on raw graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@$(LOOM) $(GLOB_ARGS) $(GLOB_ARGS_RAW) $(GLOB_ARGS_NOSEP) --ilp-solver=cbc --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+results/%/ilp-baseline-sep-cbc/raw/res.json: datasets/%.json
+	@printf "[%s] Calculating results for baseline ILPP using CBC with separation penality on raw graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@$(LOOM) $(GLOB_ARGS) $(GLOB_ARGS_RAW) $(GLOB_ARGS_SEP) --ilp-solver=cbc --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+### on pruned graph
+results/%/ilp-baseline-cbc/pruned/res.json: datasets/%.json
+	@printf "[%s] Calculating results for baseline ILPP using CBC w/o separation penality on pruned graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@$(LOOM) $(GLOB_ARGS_PRUNED) $(GLOB_ARGS) $(GLOB_ARGS_NOSEP) --ilp-solver=cbc --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+
+results/%/ilp-baseline-sep-cbc/pruned/res.json: datasets/%.json
+	@printf "[%s] Calculating results for baseline ILPP using CBC with separation penality on pruned graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@$(LOOM) $(GLOB_ARGS_PRUNED) $(GLOB_ARGS) $(GLOB_ARGS_SEP) --ilp-solver=cbc --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+### on untangled graph
+results/%/ilp-baseline-cbc/untangled/res.json: datasets/%.json
+	@printf "[%s] Calculating results for baseline ILPP using CBC w/o separation penality on untangled graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@$(LOOM) $(GLOB_ARGS_UNTANGLED)  $(GLOB_ARGS) $(GLOB_ARGS_NOSEP) --ilp-solver=cbc --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+
+results/%/ilp-baseline-sep-cbc/untangled/res.json: datasets/%.json
+	@printf "[%s] Calculating results for baseline ILPP using CBC with separation penality on untangled graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@$(LOOM) $(GLOB_ARGS_UNTANGLED) $(GLOB_ARGS) $(GLOB_ARGS_SEP) --ilp-solver=cbc --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
 
 	@printf "[%s] Done.\n" "$$(date -Is)"
 
@@ -135,49 +219,100 @@ results/%/ilp-baseline-sep/untangled/res.json: datasets/%.json
 #### IMPROVED ILP
 
 ### on raw graph
-results/%/ilp/raw/res.json: datasets/%.json
-	@printf "[%s] Calculating results for impr. ILP w/o separation penality on raw graph for $< ... \n" "$$(date -Is)"
+results/%/ilp-glpk/raw/res.json: datasets/%.json
+	@printf "[%s] Calculating results for impr. ILP using GLPK w/o separation penality on raw graph for $< ... \n" "$$(date -Is)"
 	@mkdir -p $(dir $@) # create directory
-	@$(LOOM) $(GLOB_ARGS) $(GLOB_ARGS_RAW) $(GLOB_ARGS_NOSEP) --optim-method=ilp < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+	@$(LOOM) $(GLOB_ARGS) $(GLOB_ARGS_RAW) $(GLOB_ARGS_NOSEP) --ilp-solver=glpk --optim-method=ilp < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
 
 	@printf "[%s] Done.\n" "$$(date -Is)"
 
-results/%/ilp-sep/raw/res.json: datasets/%.json
-	@printf "[%s] Calculating results for impr. ILP with separation penality on raw graph for $< ... \n" "$$(date -Is)"
+results/%/ilp-sep-glpk/raw/res.json: datasets/%.json
+	@printf "[%s] Calculating results for impr. ILP using GLPK with separation penality on raw graph for $< ... \n" "$$(date -Is)"
 	@mkdir -p $(dir $@) # create directory
-	@$(LOOM) $(GLOB_ARGS) $(GLOB_ARGS_RAW) $(GLOB_ARGS_SEP) --optim-method=ilp < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+	@$(LOOM) $(GLOB_ARGS) $(GLOB_ARGS_RAW) $(GLOB_ARGS_SEP) --ilp-solver=glpk --optim-method=ilp < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
 
 	@printf "[%s] Done.\n" "$$(date -Is)"
 
 ### on pruned graph
-results/%/ilp-pruned/res.json: datasets/%.json
-	@printf "[%s] Calculating results for impr. ILP w/o separation penality on pruned graph for $< ... \n" "$$(date -Is)"
+results/%/ilp-glpk/pruned/res.json: datasets/%.json
+	@printf "[%s] Calculating results for impr. ILP using GLPK w/o separation penality on pruned graph for $< ... \n" "$$(date -Is)"
 	@mkdir -p $(dir $@) # create directory
-	@$(LOOM) $(GLOB_ARGS_PRUNED) $(GLOB_ARGS) $(GLOB_ARGS_NOSEP) --optim-method=ilp < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+	@$(LOOM) $(GLOB_ARGS_PRUNED) $(GLOB_ARGS) $(GLOB_ARGS_NOSEP) --ilp-solver=glpk --optim-method=ilp < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
 
 	@printf "[%s] Done.\n" "$$(date -Is)"
 
 
-results/%/ilp-sep/pruned/res.json: datasets/%.json
-	@printf "[%s] Calculating results for impr. ILP with separation penality on pruned graph for $< ... \n" "$$(date -Is)"
+results/%/ilp-sep-glpk/pruned/res.json: datasets/%.json
+	@printf "[%s] Calculating results for impr. ILP using GLPK with separation penality on pruned graph for $< ... \n" "$$(date -Is)"
 	@mkdir -p $(dir $@) # create directory
-	@$(LOOM) $(GLOB_ARGS_PRUNED) $(GLOB_ARGS) $(GLOB_ARGS_SEP) --optim-method=ilp < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+	@$(LOOM) $(GLOB_ARGS_PRUNED) $(GLOB_ARGS) $(GLOB_ARGS_SEP) --ilp-solver=glpk --optim-method=ilp < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
 
 	@printf "[%s] Done.\n" "$$(date -Is)"
 
 ### on untangled graph
-results/%/ilp-untangled/res.json: datasets/%.json
-	@printf "[%s] Calculating results for impr. ILP w/o separation penality on untangled graph for $< ... \n" "$$(date -Is)"
+results/%/ilp-glpk/untangled/res.json: datasets/%.json
+	@printf "[%s] Calculating results for impr. ILP using GLPK w/o separation penality on untangled graph for $< ... \n" "$$(date -Is)"
 	@mkdir -p $(dir $@) # create directory
-	@$(LOOM) $(GLOB_ARGS_UNTANGLED)  $(GLOB_ARGS) $(GLOB_ARGS_NOSEP) --optim-method=ilp < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+	@$(LOOM) $(GLOB_ARGS_UNTANGLED)  $(GLOB_ARGS) $(GLOB_ARGS_NOSEP) --ilp-solver=glpk --optim-method=ilp < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
 
 	@printf "[%s] Done.\n" "$$(date -Is)"
 
 
-results/%/ilp-sep/untangled/res.json: datasets/%.json
-	@printf "[%s] Calculating results for impr. ILP with separation penality on untangled graph for $< ... \n" "$$(date -Is)"
+results/%/ilp-sep-glpk/untangled/res.json: datasets/%.json
+	@printf "[%s] Calculating results for impr. ILP using GLPK with separation penality on untangled graph for $< ... \n" "$$(date -Is)"
 	@mkdir -p $(dir $@) # create directory
-	@$(LOOM) $(GLOB_ARGS_UNTANGLED) $(GLOB_ARGS) $(GLOB_ARGS_SEP) --optim-method=ilp < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+	@$(LOOM) $(GLOB_ARGS_UNTANGLED) $(GLOB_ARGS) $(GLOB_ARGS_SEP) --ilp-solver=glpk --optim-method=ilp < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+###
+
+#### IMPROVED ILP
+
+### on raw graph
+results/%/ilp-cbc/raw/res.json: datasets/%.json
+	@printf "[%s] Calculating results for impr. ILP using CBC w/o separation penality on raw graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@$(LOOM) $(GLOB_ARGS) $(GLOB_ARGS_RAW) $(GLOB_ARGS_NOSEP) --ilp-solver=cbc --optim-method=ilp < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+results/%/ilp-sep-cbc/raw/res.json: datasets/%.json
+	@printf "[%s] Calculating results for impr. ILP using CBC with separation penality on raw graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@$(LOOM) $(GLOB_ARGS) $(GLOB_ARGS_RAW) $(GLOB_ARGS_SEP) --ilp-solver=cbc --optim-method=ilp < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+### on pruned graph
+results/%/ilp-cbc/pruned/res.json: datasets/%.json
+	@printf "[%s] Calculating results for impr. ILP using CBC w/o separation penality on pruned graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@$(LOOM) $(GLOB_ARGS_PRUNED) $(GLOB_ARGS) $(GLOB_ARGS_NOSEP) --ilp-solver=cbc --optim-method=ilp < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+
+results/%/ilp-sep-cbc/pruned/res.json: datasets/%.json
+	@printf "[%s] Calculating results for impr. ILP using CBC with separation penality on pruned graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@$(LOOM) $(GLOB_ARGS_PRUNED) $(GLOB_ARGS) $(GLOB_ARGS_SEP) --ilp-solver=cbc --optim-method=ilp < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+### on untangled graph
+results/%/ilp-cbc/untangled/res.json: datasets/%.json
+	@printf "[%s] Calculating results for impr. ILP using CBC w/o separation penality on untangled graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@$(LOOM) $(GLOB_ARGS_UNTANGLED)  $(GLOB_ARGS) $(GLOB_ARGS_NOSEP) --ilp-solver=cbc --optim-method=ilp < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+
+results/%/ilp-sep-cbc/untangled/res.json: datasets/%.json
+	@printf "[%s] Calculating results for impr. ILP using CBC with separation penality on untangled graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@$(LOOM) $(GLOB_ARGS_UNTANGLED) $(GLOB_ARGS) $(GLOB_ARGS_SEP) --ilp-solver=cbc --optim-method=ilp < $< > $@ 2> $(basename $@).log || (rm $@ && printf "[%s] An error occured, see the log for details.\n" "$$(date -Is)")
 
 	@printf "[%s] Done.\n" "$$(date -Is)"
 
@@ -541,6 +676,27 @@ tables/tbl-main-res-approx-error.pdf: tables/tbl-main-res-approx-error.tex
 	@pdflatex -output-directory=tables -jobname=tbl-main-res-approx-error tables/tmp
 	@rm tables/tmp
 
+tables/tbl-approx-comp.tex: $(EVAL_GREEDY) $(EVAL_GREEDY_PRUNED)$(EVAL_GREEDY_SEP) $(EVAL_GREEDY_LOOKAHEAD_SEP) $(EVAL_HILLC_SEP) $(EVAL_ANNEAL_SEP) $(EVAL_HILLC_RANDOM_SEP_UNTANGLED) $(EVAL_ANNEAL_RANDOM_SEP_UNTANGLED) $(EVAL_HILLC_RANDOM_SEP) $(EVAL_ANNEAL_RANDOM_SEP)
+	@mkdir -p tables
+	@python3 script/table.py approx-comp $(patsubst %, results/%, $(DATASETS)) > $@
+
+tables/tbl-approx-comp.pdf: tables/tbl-approx-comp.tex
+	@cat script/template.tex > tables/tmp
+	@cat $^ >> tables/tmp
+	@echo "\\\end{document}" >> tables/tmp
+	@pdflatex -output-directory=tables -jobname=tbl-approx-comp tables/tmp
+	@rm tables/tmp
+
+tables/tbl-ilp-comp.tex: $(EVAL_ILP_CBC_SEP_PRUNED) $(EVAL_ILP_CBC) $(EVAL_ILP_CBC_PRUNED) #$(EVAL_ILP_SEP_PRUNED) $(EVAL_ILP_BASELINE_SEP_PRUNED)  $(EVAL_ILP_BASELINE) $(EVAL_ILP_BASELINE_SEP) $(EVAL_ILP_BASELINE_PRUNED) $(EVAL_ILP_BASELINE_SEP_PRUNED) $(EVAL_ILP) $(EVAL_ILP_SEP) $(EVAL_ILP_PRUNED)
+	@mkdir -p tables
+	@python3 script/table.py ilp-comp $(patsubst %, results/%, $(DATASETS)) > $@
+
+tables/tbl-ilp-comp.pdf: tables/tbl-ilp-comp.tex
+	@cat script/template.tex > tables/tmp
+	@cat $^ >> tables/tmp
+	@echo "\\\end{document}" >> tables/tmp
+	@pdflatex -output-directory=tables -jobname=tbl-ilp-comp tables/tmp
+	@rm tables/tmp
 
 help:
 	cat README.md

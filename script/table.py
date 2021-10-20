@@ -55,6 +55,8 @@ def read_results(path):
     return ret
 
 def scinot(num):
+    if num == None:
+        return "---"
     magni = math.floor(math.log(num, 10))
     ret = "\\Hsci{"
     ret += "%.0f" % (num / (math.pow(10,magni)))
@@ -72,6 +74,26 @@ def get(res, a, b, c):
     if c not in res[a][b]:
         return None
     return res[a][b][c]
+
+def format_int(n):
+    if n == None:
+        return "---"
+
+    if n < 1000:
+        return "%d" % n
+
+    if n < 1000000:
+        return "%.1f\Hk" % (n / 1000)
+
+    if n < 1000000000:
+        return "%.1f\HM" % (n / 1000000)
+
+    return "%.1f\HB" % (n / 1000000000)
+
+def format_float(n):
+    if n == None:
+        return "---"
+    return "%.1f" % n
 
 def format_secs(s):
     return format_msecs(s * 1000)
@@ -154,11 +176,11 @@ def tbl_main_res_time(results):
             format_msecs(get(r, "hillc-random-sep" , "pruned", "avg_solve_time")),
             format_msecs(get(r, "hillc-random-sep" , "untangled", "avg_solve_time")),
             format_msecs(get(r, "anneal-random-sep" , "untangled", "avg_solve_time")),
-            format_msecs(get(r, "ilp-baseline" , "raw", "avg_solve_time")),
-            format_msecs(get(r, "ilp-baseline" , "untangled", "avg_solve_time")),
-            format_msecs(get(r, "ilp" , "raw", "avg_solve_time")),
-            format_msecs(get(r, "ilp" , "pruned", "avg_solve_time")),
-            format_msecs(get(r, "ilp" , "untangled", "avg_solve_time"))
+            format_msecs(get(r, "ilp-gurobi-baseline" , "raw", "avg_solve_time")),
+            format_msecs(get(r, "ilp-gurobi-baseline" , "untangled", "avg_solve_time")),
+            format_msecs(get(r, "ilp-gurobi" , "raw", "avg_solve_time")),
+            format_msecs(get(r, "ilp-gurobi" , "pruned", "avg_solve_time")),
+            format_msecs(get(r, "ilp-gurobi" , "untangled", "avg_solve_time"))
             )
 
     ret += "\\bottomrule"
@@ -185,7 +207,7 @@ def tbl_main_res_approx_error(results):
 
     for dataset_id in sort:
         r = results[dataset_id]
-        optim = get(r, "ilp-sep" , "untangled", "avg_score")
+        optim = get(r, "ilp-gurobi-sep" , "untangled", "avg_score")
 
         ret += "%s & %s  & %s &  %s &  %s  &  %s  &  %s  &  %s  &  %s  &  %s &  %s & %s\\\\\n" % (DATASET_LABELS_SHORT[dataset_id],
             format_approxerr(optim, get(r, "greedy-sep" , "raw", "avg_score")),
@@ -200,6 +222,108 @@ def tbl_main_res_approx_error(results):
             format_approxerr(optim, get(r, "anneal-random-sep" , "raw", "avg_score")),
             format_approxerr(optim, get(r, "anneal-random-sep" , "untangled", "avg_score"))
             )
+
+    ret += "\\bottomrule"
+    ret += "\\end{tabular*}}\n"
+    ret += "\\end{table}\n"
+
+    return ret
+
+
+def tbl_approx_comp(results):
+    ret = "\\begin{table}\n"
+    ret += "  \\centering\n"
+    ret += "  \\caption[]{\TODO{caption} \label{TBL:approx_comp}}\n"
+    ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\footnotesize\setlength\\tabcolsep{5pt}\n"
+
+    ret +="    \\begin{tabular*}{\\textwidth}{@{\\extracolsep{\\fill}} l@{\\hskip 2mm} r@{\\hskip 3mm} r r r@{\\hskip 2.5mm} r r r r r@{\\hskip 1.5mm}r@{\\hskip 1mm}r r r r}\n"
+    ret +="    && \\multicolumn{6}{c}{\\footnotesize On baseline graph} & & \\multicolumn{6}{c}{\\footnotesize On pruned \\& cut graph} \\\\\n"
+    ret +="    \\cline{3-8} \\cline{10-15} \\\\[-2ex] \\toprule\n"
+    ret +="    && $|\\Omega|$ & $t$ & iters & $\\times$ & $||$ & $\\theta$ & & $|\\Omega|$ & $t$ & iters & $\\times$ & $||$ & $\\theta$ \\\\\\midrule\n"
+
+    sort = []
+    for dataset_id in results:
+        sort.append(dataset_id)
+
+    sort = sorted(sort, key=lambda d : results[d]["greedy-lookahead-sep"]["raw"]["input_num_edges"])
+
+    for i, dataset_id in enumerate(sort):
+        r = results[dataset_id]
+
+        if dataset_id not in {"freiburg", "chicago", "nyc_subway"}:
+            continue
+
+        search_space = scinot(get(r, "greedy", "raw", "optgraph_solution_space_size"))
+
+        first = True
+        for a in [("exhaustive", "\\EXH"), ("greedy", "\\GREEDY"), ("greedy-lookahead", "\\GREEDYLA"), ("hillc", "+\\HIL"), ("ann", "+\\ANN"), ("hillc-random", "\\HIL"), ("ann-random", "\\ANN"),("exhaustive-sep", "\\EXHst"), ("greedy", "\\GREEDYst"), ("greedy-lookahead-sep", "\\GREEDYLAst"), ("hillc-sep", "+\\HILst"), ("ann-sep", "+\\ANNst"), ("hillc-random-sep", "\\HILst"), ("ann-random-sep", "\\ANNst")]:
+            ret += "%s & %s  & %s &  %s &  %s  &  %s  &  %s  & %s  &&  %s  &  %s &  %s & %s  &  %s & %s\\\\\n" % (DATASET_LABELS_SHORT[dataset_id] if first else "",
+                a[1],
+                search_space if a[0] in ["hillc", "hillc-sep"] else "",
+                format_msecs(get(r,  a[0], "raw", "avg_solve_time")),
+                format_float(get(r,  a[0], "raw", "avg_iterations")),
+                format_float(get(r, a[0], "raw", "avg_num_crossings")),
+                format_float(get(r, a[0], "raw", "avg_num_separations")),
+                format_float(get(r, a[0], "raw", "avg_score")),
+                scinot(get(r, a[0], "pruned", "optgraph_solution_space_size")),
+                format_msecs(get(r, a[0], "pruned", "avg_solve_time")),
+                format_float(get(r, a[0], "pruned", "avg_iterations")),
+                format_float(get(r, a[0], "pruned", "avg_num_crossings")),
+                format_float(get(r, a[0], "pruned", "avg_num_separations")),
+                format_float(get(r, a[0], "pruned", "avg_score")),
+            )
+            if a[0] == "ann-random":
+                ret += "\\cline{2-15}\n"
+            first = False
+        if i < len(sort) -1:
+            ret += "\\midrule\n"
+
+    ret += "\\bottomrule"
+    ret += "\\end{tabular*}}\n"
+    ret += "\\end{table}\n"
+
+    return ret
+
+def tbl_ilp_comp(results):
+    ret = "\\begin{table}\n"
+    ret += "  \\centering\n"
+    ret += "  \\caption[]{\TODO{caption} \label{TBL:ilp_comp}}\n"
+    ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\footnotesize\setlength\\tabcolsep{2pt}\n"
+
+    ret +="    \\begin{tabular*}{\\textwidth}{@{\\extracolsep{\\fill}} l@{\\hskip 1.2mm} r r r r@{\\hskip 2.5mm} r r r r r@{\\hskip 1.5mm}r@{\\hskip 1mm}r r r}\n"
+    ret +="    && \\multicolumn{4}{c}{\\footnotesize On baseline graph} & & \\multicolumn{4}{c}{\\footnotesize On pruned graph} \\\\\n"
+    ret +="    \\cline{3-6} \\cline{8-11} \\\\[-2ex] \\toprule\n"
+    ret +="    && \\Hdimh & \\Htglpk & \\Htcbc & \\Htgo &  & \\Hdimh & \\Htglpk & \\Htcbc & \\Htgo & $\\times$ & $||$ \\\\\\midrule\n"
+
+    sort = []
+    for dataset_id in results:
+        sort.append(dataset_id)
+
+    sort = sorted(sort, key=lambda d : results[d]["greedy-lookahead-sep"]["raw"]["input_num_edges"])
+
+    for i, dataset_id in enumerate(sort):
+        r = results[dataset_id]
+
+        first = True
+        for a in [("ilp-baseline", "\\bILP"), ("ilp-baseline-sep", "\\bILPst"), ("ilp", "\\iILP"), ("ilp-sep", "\\iILPst")]:
+            ret += "%s  & {%s}   & \\Hdim{%s}{%s}  &  %s & %s & %s & &  \\Hdim{%s}{%s} & %s & %s & %s &  %s & %s \\\\\n" % (DATASET_LABELS_SHORT[dataset_id] if first else "",
+                a[1],
+                format_int(get(r,  a[0]+"-cbc", "raw", "max_num_rows_in_comp")),
+                format_int(get(r,  a[0]+"-cbc", "raw", "max_num_cols_in_comp")),
+                format_msecs(get(r,  a[0]+"-glpk", "raw", "avg_solve_time")),
+                format_msecs(get(r,  a[0]+"-cbc", "raw", "avg_solve_time")),
+                format_msecs(get(r,  a[0]+"-gurobi", "raw", "avg_solve_time")),
+                format_int(get(r,  a[0]+"-cbc", "pruned", "max_num_rows_in_comp")),
+                format_int(get(r,  a[0]+"-cbc", "pruned", "max_num_cols_in_comp")),
+                format_msecs(get(r,  a[0]+"-glpk", "pruned", "avg_solve_time")),
+                format_msecs(get(r,  a[0]+"-cbc", "pruned", "avg_solve_time")),
+                format_msecs(get(r,  a[0]+"-gurobi", "pruned", "avg_solve_time")),
+                format_int(get(r,  a[0]+"-cbc", "pruned", "avg_num_crossings")),
+                format_int(get(r,  a[0]+"-cbc", "pruned", "avg_num_separations"))
+            )
+            first = False
+        if i < len(sort) -1:
+            ret += "\\midrule\n"
 
     ret += "\\bottomrule"
     ret += "\\end{tabular*}}\n"
@@ -225,6 +349,12 @@ def main():
 
     if sys.argv[1] == "main-res-approx-error":
         print(tbl_main_res_approx_error(results))
+
+    if sys.argv[1] == "approx-comp":
+        print(tbl_approx_comp(results))
+
+    if sys.argv[1] == "ilp-comp":
+        print(tbl_ilp_comp(results))
 
 if __name__ == "__main__":
     main()

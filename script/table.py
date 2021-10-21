@@ -287,11 +287,11 @@ def tbl_approx_comp(results):
 def tbl_ilp_comp(results):
     ret = "\\begin{table}\n"
     ret += "  \\centering\n"
-    ret += "  \\caption[]{\TODO{caption} \label{TBL:ilp_comp}}\n"
+    ret += "  \\caption[]{ILP Dimensions (given as rows$\\times$ cols) and solution times for all our ILP variants on the raw input graph and on the pruned \& cut input graph. If a graph had multiple components, we optimized them separately, and the dimensions for the largest component are given, but solution times are always cumulative. \label{TBL:ilp_comp}}\n"
     ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\footnotesize\setlength\\tabcolsep{2pt}\n"
 
     ret +="    \\begin{tabular*}{\\textwidth}{@{\\extracolsep{\\fill}} l@{\\hskip 1.2mm} r r r r@{\\hskip 2.5mm} r r r r r@{\\hskip 1.5mm}r@{\\hskip 1mm}r r r}\n"
-    ret +="    && \\multicolumn{4}{c}{\\footnotesize On baseline graph} & & \\multicolumn{4}{c}{\\footnotesize On pruned graph} \\\\\n"
+    ret +="    && \\multicolumn{4}{c}{\\footnotesize On raw graph} & & \\multicolumn{4}{c}{\\footnotesize On pruned graph} \\\\\n"
     ret +="    \\cline{3-6} \\cline{8-11} \\\\[-2ex] \\toprule\n"
     ret +="    && \\Hdimh & \\Htglpk & \\Htcbc & \\Htgo &  & \\Hdimh & \\Htglpk & \\Htcbc & \\Htgo & $\\times$ & $||$ \\\\\\midrule\n"
 
@@ -331,6 +331,153 @@ def tbl_ilp_comp(results):
 
     return ret
 
+def tbl_untangling_graph_size(results):
+    ret = "\\begin{table}\n"
+    ret += "  \\centering\n"
+    ret += "  \\caption[]{Effects of full line graph simplification on line graph dimensions. $|V|$ is the number of nodes, $|E|$ is the number of edges, $M$ is the maximum number of lines per edge, $|\\Omega|$ is the search space size (sum of the search space sizes of the graph components), $C$ is the number of nontrivial (more than 2 nodes) graph components, $C^1$ is the number of nontrivial graph components with a search space size of 1 (not requiring further optimization).\\label{TBL:untangling}}\n"
+    ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\normalsize\setlength\\tabcolsep{2pt}\n"
+
+    ret +="    \\begin{tabular*}{\\textwidth}{@{\\extracolsep{\\fill}} l r r r r r r r r r r r r r r r r r r r r r r}\n"
+    ret +="    && \\multicolumn{6}{c}{\\footnotesize Raw input graph} && \\multicolumn{6}{c}{\\footnotesize Pruned \\& cut graph}  && \\multicolumn{6}{c}{\\footnotesize Fully simplified graph} \\\\\n"
+    ret +="    \\cline{3-8} \\cline{10-15} \\cline{17-22}  \\\\[-2ex] \\toprule\n"
+    ret +="    && $|V|$ & $|E|$ & $M$ & $|\\Omega|$ & $C$ & $C^1$ && $|V|$ & $|E|$ & $M$ & $|\\Omega|$ & $C$ & $C^1$ && $|V|$ & $|E|$ & $M$ &  $|\\Omega|$  & $C$ & $C^1$ \\\\\\midrule\n"
+
+    sort = []
+    for dataset_id in results:
+        sort.append(dataset_id)
+
+    sort = sorted(sort, key=lambda d : results[d]["greedy-lookahead-sep"]["raw"]["input_num_edges"])
+
+    for i, dataset_id in enumerate(sort):
+        r = results[dataset_id]
+
+        ret += "%s && %s  & %s  & %s &  %s  &   %s  &  %s  &&  %s  &  %s  &  %s &  %s &  %s   &  %s  &&  %s &  %s &  %s &  %s &  %s &  %s\\\\\n" % (DATASET_LABELS_SHORT[dataset_id],
+            format_int(get(r,  "greedy-sep", "raw", "optgraph_num_nodes")),
+            format_int(get(r,  "greedy-sep", "raw", "optgraph_num_edges")),
+            format_int(get(r,  "greedy-sep", "raw", "optgraph_max_number_lines")),
+            scinot(get(r,  "greedy-sep", "raw", "optgraph_solution_space_size")),
+            format_int(get(r,  "greedy-sep", "raw", "optgraph_nontrivial_comps")),
+            format_int(get(r,  "greedy-sep", "raw", "optgraph_nontrivial_comps_searchspace_one")),
+            format_int(get(r,  "greedy-sep", "pruned", "optgraph_num_nodes")),
+            format_int(get(r,  "greedy-sep", "pruned", "optgraph_num_edges")),
+            format_int(get(r,  "greedy-sep", "pruned", "optgraph_max_number_lines")),
+            scinot(get(r,  "greedy-sep", "pruned", "optgraph_solution_space_size")),
+            format_int(get(r,  "greedy-sep", "pruned", "optgraph_nontrivial_comps")),
+            format_int(get(r,  "greedy-sep", "pruned", "optgraph_nontrivial_comps_searchspace_one")),
+            format_int(get(r,  "greedy-sep", "untangled", "optgraph_num_nodes")),
+            format_int(get(r,  "greedy-sep", "untangled", "optgraph_num_edges")),
+            format_int(get(r,  "greedy-sep", "untangled", "optgraph_max_number_lines")),
+            scinot(get(r,  "greedy-sep", "untangled", "optgraph_solution_space_size")),
+            format_int(get(r,  "greedy-sep", "untangled", "optgraph_nontrivial_comps")),
+            format_int(get(r,  "greedy-sep", "untangled", "optgraph_nontrivial_comps_searchspace_one")),
+        )
+
+    ret += "\\bottomrule"
+    ret += "\\end{tabular*}}\n"
+    ret += "\\end{table}\n"
+
+    return ret
+
+def tbl_untangling_ilp(results):
+    ret = "\\begin{table}\n"
+    ret += "  \\centering\n"
+    ret += "  \\caption[]{Impact of full simplification on ILP sizes and solution times.\\label{TBL:untangling_solve} }\n"
+    ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\normalsize\\setlength\\tabcolsep{2pt}\n"
+
+    ret +="    \\begin{tabular*}{1\\textwidth}{@{\\extracolsep{\\fill}} l r r r r r r r r r r r r r r}\n"
+    ret +="    & & \\multicolumn{4}{ c }{\\footnotesize Pruned graph} & & \\multicolumn{4}{ c }{\\footnotesize Fully simplified graph} \\\\\n"
+    ret +="    \\cline{3-6} \\cline{8-11} \\\\[-2ex] \\toprule\\noalign{\\smallskip}\n"
+    ret +="    & & \\Hdimh & GLPK & CBC & GU & & \\Hdimh$_{max}$ & GLPK & CBC & GU \\\\\\midrule\n"
+
+    sort = []
+    for dataset_id in results:
+        sort.append(dataset_id)
+
+    sort = sorted(sort, key=lambda d : results[d]["greedy-lookahead-sep"]["raw"]["input_num_edges"])
+
+    for i, dataset_id in enumerate(sort):
+        r = results[dataset_id]
+
+        first = True
+        for a in [("ilp", "\\iILP"), ("ilp-sep", "\\iILPst")]:
+            ret += "%s  & {%s}   & \\Hdim{%s}{%s}       &  %s &  %s & %s & & \\Hdim{%s}{%s} & %s & %s & %s \\\\\n" % (DATASET_LABELS_SHORT[dataset_id] if first else "",
+                a[1],
+                format_int(get(r,  a[0]+"-cbc", "pruned", "max_num_rows_in_comp")),
+                format_int(get(r,  a[0]+"-cbc", "pruned", "max_num_cols_in_comp")),
+                format_msecs(get(r,  a[0]+"-glpk", "pruned", "avg_solve_time")),
+                format_msecs(get(r,  a[0]+"-cbc", "pruned", "avg_solve_time")),
+                format_msecs(get(r,  a[0]+"-gurobi", "pruned", "avg_solve_time")),
+                format_int(get(r,  a[0]+"-cbc", "untangled", "max_num_rows_in_comp")),
+                format_int(get(r,  a[0]+"-cbc", "untangled", "max_num_cols_in_comp")),
+                format_msecs(get(r,  a[0]+"-glpk", "untangled", "avg_solve_time")),
+                format_msecs(get(r,  a[0]+"-cbc", "untangled", "avg_solve_time")),
+                format_msecs(get(r,  a[0]+"-gurobi", "untangled", "avg_solve_time"))
+            )
+            first = False
+        if i < len(sort) -1:
+            ret += "\\midrule\n"
+
+    ret += "\\bottomrule"
+    ret += "\\end{tabular*}}\n"
+    ret += "\\end{table}\n"
+
+    return ret
+    ret += "\\bottomrule"
+    ret += "\\end{tabular*}}\n"
+    ret += "\\end{table}\n"
+
+    return ret
+
+def tbl_untangling_approx(results):
+    ret = "\\begin{table}\n"
+    ret += "  \\centering\n"
+    ret += "  \\caption[]{Impact of full simplification on ILP sizes and solution times.\\label{TBL:untangling_solve} }\n"
+    ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\normalsize\\setlength\\tabcolsep{2pt}\n"
+
+    ret +="    \\begin{tabular*}{1\\textwidth}{@{\\extracolsep{\\fill}} l r r r r r r r r r r r r r r}\n"
+    ret +="    & & \\multicolumn{4}{ c }{\\footnotesize Pruned graph} & & \\multicolumn{4}{ c }{\\footnotesize Fully simplified graph} \\\\\n"
+    ret +="    \\cline{3-6} \\cline{8-11} \\\\[-2ex] \\toprule\\noalign{\\smallskip}\n"
+    ret +="    & & \\Hdimh & GLPK & CBC & GU & & \\Hdimh$_{max}$ & GLPK & CBC & GU \\\\\\midrule\n"
+
+    sort = []
+    for dataset_id in results:
+        sort.append(dataset_id)
+
+    sort = sorted(sort, key=lambda d : results[d]["greedy-lookahead-sep"]["raw"]["input_num_edges"])
+
+    for i, dataset_id in enumerate(sort):
+        r = results[dataset_id]
+
+        first = True
+        for a in [("ilp", "\\iILP"), ("ilp-sep", "\\iILPst")]:
+            ret += "%s  & {%s}   & \\Hdim{%s}{%s}       &  %s &  %s & %s & & \\Hdim{%s}{%s} & %s & %s & %s \\\\\n" % (DATASET_LABELS_SHORT[dataset_id] if first else "",
+                a[1],
+                format_int(get(r,  a[0]+"-cbc", "pruned", "max_num_rows_in_comp")),
+                format_int(get(r,  a[0]+"-cbc", "pruned", "max_num_cols_in_comp")),
+                format_msecs(get(r,  a[0]+"-glpk", "pruned", "avg_solve_time")),
+                format_msecs(get(r,  a[0]+"-cbc", "pruned", "avg_solve_time")),
+                format_msecs(get(r,  a[0]+"-gurobi", "pruned", "avg_solve_time")),
+                format_int(get(r,  a[0]+"-cbc", "untangled", "max_num_rows_in_comp")),
+                format_int(get(r,  a[0]+"-cbc", "untangled", "max_num_cols_in_comp")),
+                format_msecs(get(r,  a[0]+"-glpk", "untangled", "avg_solve_time")),
+                format_msecs(get(r,  a[0]+"-cbc", "untangled", "avg_solve_time")),
+                format_msecs(get(r,  a[0]+"-gurobi", "untangled", "avg_solve_time"))
+            )
+            first = False
+        if i < len(sort) -1:
+            ret += "\\midrule\n"
+
+    ret += "\\bottomrule"
+    ret += "\\end{tabular*}}\n"
+    ret += "\\end{table}\n"
+
+    return ret
+    ret += "\\bottomrule"
+    ret += "\\end{tabular*}}\n"
+    ret += "\\end{table}\n"
+
+    return ret
+
 def main():
     if len(sys.argv) < 3:
         print("Usage: " + sys.argv[0] + " <table> <dataset results paths>")
@@ -355,6 +502,12 @@ def main():
 
     if sys.argv[1] == "ilp-comp":
         print(tbl_ilp_comp(results))
+
+    if sys.argv[1] == "untangling-graph-size":
+        print(tbl_untangling_graph_size(results))
+
+    if sys.argv[1] == "untangling-ilp":
+        print(tbl_untangling_ilp(results))
 
 if __name__ == "__main__":
     main()

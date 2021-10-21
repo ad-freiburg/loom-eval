@@ -676,7 +676,7 @@ tables/tbl-main-res-approx-error.pdf: tables/tbl-main-res-approx-error.tex
 	@pdflatex -output-directory=tables -jobname=tbl-main-res-approx-error tables/tmp
 	@rm tables/tmp
 
-tables/tbl-approx-comp.tex: $(EVAL_GREEDY) $(EVAL_GREEDY_PRUNED)$(EVAL_GREEDY_SEP) $(EVAL_GREEDY_LOOKAHEAD_SEP) $(EVAL_HILLC_SEP) $(EVAL_ANNEAL_SEP) $(EVAL_HILLC_RANDOM_SEP_UNTANGLED) $(EVAL_ANNEAL_RANDOM_SEP_UNTANGLED) $(EVAL_HILLC_RANDOM_SEP) $(EVAL_ANNEAL_RANDOM_SEP)
+tables/tbl-approx-comp.tex: $(EVAL_GREEDY) $(EVAL_GREEDY_PRUNED) $(EVAL_GREEDY_SEP) $(EVAL_GREEDY_LOOKAHEAD_SEP) $(EVAL_HILLC_SEP) $(EVAL_ANNEAL_SEP) $(EVAL_HILLC_RANDOM_SEP_UNTANGLED) $(EVAL_ANNEAL_RANDOM_SEP_UNTANGLED) $(EVAL_HILLC_RANDOM_SEP) $(EVAL_ANNEAL_RANDOM_SEP)
 	@mkdir -p tables
 	@python3 script/table.py approx-comp $(patsubst %, results/%, $(DATASETS)) > $@
 
@@ -687,7 +687,7 @@ tables/tbl-approx-comp.pdf: tables/tbl-approx-comp.tex
 	@pdflatex -output-directory=tables -jobname=tbl-approx-comp tables/tmp
 	@rm tables/tmp
 
-tables/tbl-ilp-comp.tex: $(EVAL_ILP_CBC_SEP_PRUNED) $(EVAL_ILP_CBC) $(EVAL_ILP_CBC_PRUNED) #$(EVAL_ILP_SEP_PRUNED) $(EVAL_ILP_BASELINE_SEP_PRUNED)  $(EVAL_ILP_BASELINE) $(EVAL_ILP_BASELINE_SEP) $(EVAL_ILP_BASELINE_PRUNED) $(EVAL_ILP_BASELINE_SEP_PRUNED) $(EVAL_ILP) $(EVAL_ILP_SEP) $(EVAL_ILP_PRUNED)
+tables/tbl-ilp-comp.tex: $(EVAL_ILP_SEP_PRUNED) $(EVAL_ILP_BASELINE_SEP_PRUNED)  $(EVAL_ILP_BASELINE) $(EVAL_ILP_BASELINE_SEP) $(EVAL_ILP_BASELINE_PRUNED) $(EVAL_ILP_BASELINE_SEP_PRUNED) $(EVAL_ILP) $(EVAL_ILP_SEP) $(EVAL_ILP_PRUNED)
 	@mkdir -p tables
 	@python3 script/table.py ilp-comp $(patsubst %, results/%, $(DATASETS)) > $@
 
@@ -696,6 +696,28 @@ tables/tbl-ilp-comp.pdf: tables/tbl-ilp-comp.tex
 	@cat $^ >> tables/tmp
 	@echo "\\\end{document}" >> tables/tmp
 	@pdflatex -output-directory=tables -jobname=tbl-ilp-comp tables/tmp
+	@rm tables/tmp
+
+tables/tbl-untangling-graph-size.tex: $(EVAL_GREEDY_SEP) $(EVAL_GREEDY_SEP_PRUNED) $(EVAL_GREEDY_SEP_UNTANGLED)
+	@mkdir -p tables
+	@python3 script/table.py untangling-graph-size $(patsubst %, results/%, $(DATASETS)) > $@
+
+tables/tbl-untangling-graph-size.pdf: tables/tbl-untangling-graph-size.tex
+	@cat script/template.tex > tables/tmp
+	@cat $^ >> tables/tmp
+	@echo "\\\end{document}" >> tables/tmp
+	@pdflatex -output-directory=tables -jobname=tbl-untangling-graph-size tables/tmp
+	@rm tables/tmp
+
+tables/tbl-untangling-ilp.tex: $(EVAL_ILP_SEP_PRUNED) $(EVAL_ILP_SEP_UNTANGLED) $(EVAL_ILP_PRUNED) $(EVAL_ILP_UNTANGLED)
+	@mkdir -p tables
+	@python3 script/table.py untangling-ilp $(patsubst %, results/%, $(DATASETS)) > $@
+
+tables/tbl-untangling-ilp.pdf: tables/tbl-untangling-ilp.tex
+	@cat script/template.tex > tables/tmp
+	@cat $^ >> tables/tmp
+	@echo "\\\end{document}" >> tables/tmp
+	@pdflatex -output-directory=tables -jobname=tbl-untangling-ilp tables/tmp
 	@rm tables/tmp
 
 help:

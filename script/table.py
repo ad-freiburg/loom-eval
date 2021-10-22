@@ -103,7 +103,7 @@ def format_msecs(ms):
         return "---"
 
     if ms < 0.1:
-        return "$<1$\Hms" % ms
+        return "$<1$\Hms"
 
     if ms < 1:
         return "%.1f\Hms" % ms
@@ -192,8 +192,8 @@ def tbl_main_res_time(results):
 def tbl_main_res_approx_error(results):
     ret = "\\begin{table}\n"
     ret += "  \\centering\n"
-    ret += "  \\caption[]{Main results for the approximation errors of a selection of our heuristic methods on all test datasets. \TODO{how are they selected?} \label{TBL:main_results_approx}}\n"
-    ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\normalsize\setlength\\tabcolsep{5pt}\n"
+    ret += "  \\caption[]{Main results for the relative approximation errors ($\\frac{\\theta_{\\text{approx}}}{\\theta} - 1$) of a selection of our heuristic methods on all test datasets. \\TODO{how are they selected?} \label{TBL:main_results_approx}}\n"
+    ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\normalsize\\setlength\\tabcolsep{5pt}\n"
 
     ret +="  \\begin{tabular*}{1\\textwidth}{@{\\extracolsep{\\fill}} l r r r r r r r r r r r r}\\toprule\n"
     ret +="    \\method\\hspace{-7pt} & \\GREEDYsf   & \\GREEDYLAsf & \\GREEDYLAsf  & \\HILGRsf & \\HILGRsf  & \\ANNGRsf  & \\ANNGRsf   & \\HILsf  & \\HILsf   & \\ANNsf & \\ANNsf  \\\\[-1.5mm]\n"
@@ -205,9 +205,23 @@ def tbl_main_res_approx_error(results):
 
     sort = sorted(sort, key=lambda d : results[d]["greedy-lookahead-sep"]["raw"]["input_num_edges"])
 
+    avg = [0] * 11
+
     for dataset_id in sort:
         r = results[dataset_id]
-        optim = get(r, "ilp-gurobi-sep" , "untangled", "avg_score")
+        optim = get(r, "ilp-sep-cbc" , "untangled", "avg_score")
+
+        avg[0] += (get(r, "greedy-sep" , "raw", "avg_score") - optim) / optim
+        avg[1] += (get(r, "greedy-lookahead-sep" , "raw", "avg_score") - optim) / optim
+        avg[2] += (get(r, "greedy-lookahead-sep" , "raw", "avg_score") - optim) / optim
+        avg[3] += (get(r, "hillc-sep" , "raw", "avg_score") - optim) / optim
+        avg[4] += (get(r, "hillc-sep" , "untangled", "avg_score") - optim) / optim
+        avg[5] += (get(r, "anneal-sep" , "raw", "avg_score") - optim) / optim
+        avg[6] += (get(r, "anneal-sep" , "untangled", "avg_score") - optim) / optim
+        avg[7] += (get(r, "hillc-random-sep" , "raw", "avg_score") - optim) / optim
+        avg[8] += (get(r, "hillc-random-sep" , "untangled", "avg_score") - optim) / optim
+        avg[9] += (get(r, "anneal-random-sep" , "raw", "avg_score") - optim) / optim
+        avg[10] += (get(r, "anneal-random-sep" , "untangled", "avg_score") - optim) / optim
 
         ret += "%s & %s  & %s &  %s &  %s  &  %s  &  %s  &  %s  &  %s  &  %s &  %s & %s\\\\\n" % (DATASET_LABELS_SHORT[dataset_id],
             format_approxerr(optim, get(r, "greedy-sep" , "raw", "avg_score")),
@@ -223,23 +237,47 @@ def tbl_main_res_approx_error(results):
             format_approxerr(optim, get(r, "anneal-random-sep" , "untangled", "avg_score"))
             )
 
+    ret += "\\midrule\n"
+
+    mini = avg.index(min(avg))
+
+    ret += "avg & %s  & %s &  %s &  %s  &  %s  & %s  &  %s  &  %s  &  %s & %s & %s\\\\\n" % (bold_if(format_float(avg[0] / len(sort)), mini == 0),
+        bold_if(format_float(avg[1] / len(sort)), mini == 1),
+        bold_if(format_float(avg[2] / len(sort)), mini == 2),
+        bold_if(format_float(avg[3] / len(sort)), mini == 3),
+        bold_if(format_float(avg[4] / len(sort)), mini == 4),
+        bold_if(format_float(avg[5] / len(sort)), mini == 5),
+        bold_if(format_float(avg[6] / len(sort)), mini == 6),
+        bold_if(format_float(avg[7] / len(sort)), mini == 7),
+        bold_if(format_float(avg[8] / len(sort)), mini == 8),
+        bold_if(format_float(avg[9] / len(sort)), mini == 9),
+        bold_if(format_float(avg[10] / len(sort)), mini == 10),
+    )
+
     ret += "\\bottomrule"
     ret += "\\end{tabular*}}\n"
     ret += "\\end{table}\n"
 
     return ret
 
+def bold(s):
+    return "\\textbf{" + s + "}"
+
+def bold_if(s, t):
+    if not t:
+        return s
+    return "\\textbf{" + s + "}"
 
 def tbl_approx_comp(results):
     ret = "\\begin{table}\n"
     ret += "  \\centering\n"
-    ret += "  \\caption[]{\TODO{caption} \label{TBL:approx_comp}}\n"
-    ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\footnotesize\setlength\\tabcolsep{5pt}\n"
+    ret += "  \\caption[]{\\TODO{caption} \\label{TBL:approx_comp}}\n"
+    ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\footnotesize\\setlength\\tabcolsep{5pt}\n"
 
     ret +="    \\begin{tabular*}{\\textwidth}{@{\\extracolsep{\\fill}} l@{\\hskip 2mm} r@{\\hskip 3mm} r r r@{\\hskip 2.5mm} r r r r r@{\\hskip 1.5mm}r@{\\hskip 1mm}r r r r}\n"
     ret +="    && \\multicolumn{6}{c}{\\footnotesize On baseline graph} & & \\multicolumn{6}{c}{\\footnotesize On pruned \\& cut graph} \\\\\n"
     ret +="    \\cline{3-8} \\cline{10-15} \\\\[-2ex] \\toprule\n"
-    ret +="    && $|\\Omega|$ & $t$ & iters & $\\times$ & $||$ & $\\theta$ & & $|\\Omega|$ & $t$ & iters & $\\times$ & $||$ & $\\theta$ \\\\\\midrule\n"
+    ret +="    && $|\\Omega|$ & $t$ & $\\times$ & $||$ & $\\theta$ & $\\eta$ & & $|\\Omega|$ & $t$ & $\\times$ & $||$ & $\\theta$ & $\\eta$ \\\\\\midrule\n"
 
     sort = []
     for dataset_id in results:
@@ -250,29 +288,36 @@ def tbl_approx_comp(results):
     for i, dataset_id in enumerate(sort):
         r = results[dataset_id]
 
-        if dataset_id not in {"freiburg", "chicago", "nyc_subway"}:
+        if dataset_id not in {"freiburg", "sydney", "nyc_subway"}:
             continue
 
         search_space = scinot(get(r, "greedy", "raw", "optgraph_solution_space_size"))
+        search_space_pruned = scinot(get(r, "greedy", "pruned", "optgraph_solution_space_size"))
 
         first = True
-        for a in [("exhaustive", "\\EXH"), ("greedy", "\\GREEDY"), ("greedy-lookahead", "\\GREEDYLA"), ("hillc", "+\\HIL"), ("ann", "+\\ANN"), ("hillc-random", "\\HIL"), ("ann-random", "\\ANN"),("exhaustive-sep", "\\EXHst"), ("greedy", "\\GREEDYst"), ("greedy-lookahead-sep", "\\GREEDYLAst"), ("hillc-sep", "+\\HILst"), ("ann-sep", "+\\ANNst"), ("hillc-random-sep", "\\HILst"), ("ann-random-sep", "\\ANNst")]:
+        for a in [("exhaustive", "\\EXH"), ("greedy", "\\GREEDY"), ("greedy-lookahead", "\\GREEDYLA"), ("hillc", "+\\HIL"), ("anneal", "+\\ANN"), ("hillc-random", "\\HIL"), ("anneal-random", "\\ANN"),("exhaustive-sep", "\\EXHst"), ("greedy", "\\GREEDYst"), ("greedy-lookahead-sep", "\\GREEDYLAst"), ("hillc-sep", "+\\HILst"), ("anneal-sep", "+\\ANNst"), ("hillc-random-sep", "\\HILst"), ("anneal-random-sep", "\\ANNst")]:
+            
+            if "sep" in a[0]:
+                optim = get(r, "ilp-sep-cbc" , "untangled", "avg_score")
+            else:
+                optim = get(r, "ilp-cbc" , "untangled", "avg_score")
+
             ret += "%s & %s  & %s &  %s &  %s  &  %s  &  %s  & %s  &&  %s  &  %s &  %s & %s  &  %s & %s\\\\\n" % (DATASET_LABELS_SHORT[dataset_id] if first else "",
                 a[1],
                 search_space if a[0] in ["hillc", "hillc-sep"] else "",
                 format_msecs(get(r,  a[0], "raw", "avg_solve_time")),
-                format_float(get(r,  a[0], "raw", "avg_iterations")),
                 format_float(get(r, a[0], "raw", "avg_num_crossings")),
                 format_float(get(r, a[0], "raw", "avg_num_separations")),
                 format_float(get(r, a[0], "raw", "avg_score")),
-                scinot(get(r, a[0], "pruned", "optgraph_solution_space_size")),
+                format_approxerr(optim, get(r, a[0] , "raw", "avg_score")),
+                search_space_pruned if a[0] in ["hillc", "hillc-sep"] else "",
                 format_msecs(get(r, a[0], "pruned", "avg_solve_time")),
-                format_float(get(r, a[0], "pruned", "avg_iterations")),
                 format_float(get(r, a[0], "pruned", "avg_num_crossings")),
                 format_float(get(r, a[0], "pruned", "avg_num_separations")),
                 format_float(get(r, a[0], "pruned", "avg_score")),
+                format_approxerr(optim, get(r, a[0] , "pruned", "avg_score")),
             )
-            if a[0] == "ann-random":
+            if a[0] == "anneal-random":
                 ret += "\\cline{2-15}\n"
             first = False
         if i < len(sort) -1:
@@ -284,11 +329,75 @@ def tbl_approx_comp(results):
 
     return ret
 
+def tbl_approx_comp_avg(results):
+    ret = "\\begin{table}\n"
+    ret += "  \\centering\n"
+    ret += "  \\caption[]{\\TODO{caption} \\label{TBL:approx_comp_avg}}\n"
+    ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\normalsize\\setlength\\tabcolsep{5pt}\n"
+
+    ret +="    \\begin{tabular*}{0.6\\textwidth}{@{\\extracolsep{\\fill}} l@{\\hskip 2mm} r r r r}\n"
+    ret +="    && \\multicolumn{1}{c}{\\footnotesize On baseline graph} & & \\multicolumn{1}{c}{\\footnotesize On pruned \\& cut graph} \\\\\n"
+    ret +="    \\cline{2-3} \\cline{4-5} \\\\[-2ex] \\toprule\n"
+    ret +="    && $\\eta$ && $\\eta$ \\\\\\midrule\n"
+
+    sort = []
+    for dataset_id in results:
+        sort.append(dataset_id)
+
+    sort = sorted(sort, key=lambda d : results[d]["greedy-lookahead-sep"]["raw"]["input_num_edges"])
+
+    methods = [("greedy", "\\GREEDY"), ("greedy-lookahead", "\\GREEDYLA"), ("hillc", "+\\HIL"), ("anneal", "+\\ANN"), ("hillc-random", "\\HIL"), ("anneal-random", "\\ANN"), ("greedy", "\\GREEDYst"), ("greedy-lookahead-sep", "\\GREEDYLAst"), ("hillc-sep", "+\\HILst"), ("anneal-sep", "+\\ANNst"), ("hillc-random-sep", "\\HILst"), ("anneal-random-sep", "\\ANNst")]
+
+    avg = {k[0]: 0 for k in methods}
+    avg_pruned = {k[0]: 0 for k in methods}
+
+    for dataset_id in sort:
+        r = results[dataset_id]
+
+        for m in methods:
+            if "sep" in m[0]:
+                optim = get(r, "ilp-sep-cbc" , "untangled", "avg_score")
+            else:
+                optim = get(r, "ilp-cbc" , "untangled", "avg_score")
+
+            if avg[m[0]] is None or get(r, m[0] , "raw", "avg_score") is None:
+                avg[m[0]] = None
+            else:
+                avg[m[0]] += ((get(r, m[0] , "raw", "avg_score") - optim) / optim) / len(sort)
+
+            if avg_pruned[m[0]] is None or get(r, m[0] , "pruned", "avg_score") is None:
+                avg_pruned[m[0]] = None
+            else:
+                avg_pruned[m[0]] += ((get(r, m[0] , "pruned", "avg_score") - optim) / optim) / len(sort)
+
+
+
+    for a in methods:        
+        if "sep" in a[0]:
+            optim = get(r, "ilp-sep-cbc" , "untangled", "avg_score")
+        else:
+            optim = get(r, "ilp-cbc" , "untangled", "avg_score")
+
+        ret += "%s && %s  && %s \\\\\n" % (a[1],
+            format_float(avg[a[0]]),
+            format_float(avg_pruned[a[0]])
+        )
+
+        if a[0] == "anneal-random":
+            ret += "\\cline{2-5}\n"
+        first = False
+
+    ret += "\\bottomrule"
+    ret += "\\end{tabular*}}\n"
+    ret += "\\end{table}\n"
+
+    return ret
+
 def tbl_ilp_comp(results):
     ret = "\\begin{table}\n"
     ret += "  \\centering\n"
-    ret += "  \\caption[]{ILP Dimensions (given as rows$\\times$ cols) and solution times for all our ILP variants on the raw input graph and on the pruned \& cut input graph. If a graph had multiple components, we optimized them separately, and the dimensions for the largest component are given, but solution times are always cumulative. \label{TBL:ilp_comp}}\n"
-    ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\footnotesize\setlength\\tabcolsep{2pt}\n"
+    ret += "  \\caption[]{ILP Dimensions (given as rows$\\times$ cols) and solution times for all our ILP variants on the raw input graph and on the pruned \\& cut input graph. If a graph had multiple components, we optimized them separately, and the dimensions for the largest component are given, but solution times are always cumulative. \label{TBL:ilp_comp}}\n"
+    ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\footnotesize\\setlength\\tabcolsep{2pt}\n"
 
     ret +="    \\begin{tabular*}{\\textwidth}{@{\\extracolsep{\\fill}} l@{\\hskip 1.2mm} r r r r@{\\hskip 2.5mm} r r r r r@{\\hskip 1.5mm}r@{\\hskip 1mm}r r r}\n"
     ret +="    && \\multicolumn{4}{c}{\\footnotesize On raw graph} & & \\multicolumn{4}{c}{\\footnotesize On pruned graph} \\\\\n"
@@ -335,7 +444,7 @@ def tbl_untangling_graph_size(results):
     ret = "\\begin{table}\n"
     ret += "  \\centering\n"
     ret += "  \\caption[]{Effects of full line graph simplification on line graph dimensions. $|V|$ is the number of nodes, $|E|$ is the number of edges, $M$ is the maximum number of lines per edge, $|\\Omega|$ is the search space size (sum of the search space sizes of the graph components), $C$ is the number of nontrivial (more than 2 nodes) graph components, $C^1$ is the number of nontrivial graph components with a search space size of 1 (not requiring further optimization).\\label{TBL:untangling}}\n"
-    ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\normalsize\setlength\\tabcolsep{2pt}\n"
+    ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\normalsize\\setlength\\tabcolsep{2pt}\n"
 
     ret +="    \\begin{tabular*}{\\textwidth}{@{\\extracolsep{\\fill}} l r r r r r r r r r r r r r r r r r r r r r r}\n"
     ret +="    && \\multicolumn{6}{c}{\\footnotesize Raw input graph} && \\multicolumn{6}{c}{\\footnotesize Pruned \\& cut graph}  && \\multicolumn{6}{c}{\\footnotesize Fully simplified graph} \\\\\n"
@@ -431,13 +540,13 @@ def tbl_untangling_ilp(results):
 def tbl_untangling_approx(results):
     ret = "\\begin{table}\n"
     ret += "  \\centering\n"
-    ret += "  \\caption[]{Impact of full simplification on ILP sizes and solution times.\\label{TBL:untangling_solve} }\n"
+    ret += "  \\caption[]{Impact of full simplification on selected baseline heuristic solution times and objective function values. \\label{TBL:untangling_baseline}}\n"
     ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\normalsize\\setlength\\tabcolsep{2pt}\n"
 
-    ret +="    \\begin{tabular*}{1\\textwidth}{@{\\extracolsep{\\fill}} l r r r r r r r r r r r r r r}\n"
-    ret +="    & & \\multicolumn{4}{ c }{\\footnotesize Pruned graph} & & \\multicolumn{4}{ c }{\\footnotesize Fully simplified graph} \\\\\n"
-    ret +="    \\cline{3-6} \\cline{8-11} \\\\[-2ex] \\toprule\\noalign{\\smallskip}\n"
-    ret +="    & & \\Hdimh & GLPK & CBC & GU & & \\Hdimh$_{max}$ & GLPK & CBC & GU \\\\\\midrule\n"
+    ret +="    \\begin{tabular*}{.8\\textwidth}{@{\\extracolsep{\\fill}} l r r r r r r r r r r r r}\n"
+    ret +="    & & \\multicolumn{5}{ c }{\\footnotesize Pruned graph} & & \\multicolumn{5}{ c }{\\footnotesize Fully simplified graph} \\\\\n"
+    ret +="    \\cline{3-7} \\cline{9-13} \\\\[-2ex] \\toprule\\noalign{\\smallskip}\n"
+    ret +="    & & $t$ & $\\times$ & $||$ & $\\theta$ & $\\eta$ & & $t$ & $\\times$ & $\\eta$ & $||$ & $\\theta$ \\\\\\midrule\n"
 
     sort = []
     for dataset_id in results:
@@ -445,33 +554,37 @@ def tbl_untangling_approx(results):
 
     sort = sorted(sort, key=lambda d : results[d]["greedy-lookahead-sep"]["raw"]["input_num_edges"])
 
+
+
     for i, dataset_id in enumerate(sort):
         r = results[dataset_id]
 
+        optim = get(r, "ilp-sep-cbc", "untangled", "avg_score")
+
+
+        if dataset_id not in {"freiburg", "sydney", "nyc_subway"}:
+            continue
+
+
         first = True
-        for a in [("ilp", "\\iILP"), ("ilp-sep", "\\iILPst")]:
-            ret += "%s  & {%s}   & \\Hdim{%s}{%s}       &  %s &  %s & %s & & \\Hdim{%s}{%s} & %s & %s & %s \\\\\n" % (DATASET_LABELS_SHORT[dataset_id] if first else "",
+        for a in [("exhaustive-sep", "\\EXHst"), ("greedy-lookahead-sep", "\\GREEDYLAst"), ("hillc-sep", "+\\HILst"), ("anneal-sep", "+\\ANNst"), ("hillc-random-sep", "\\HILst"), ("anneal-random-sep", "\\ANNst")]:
+            ret += "%s  & {%s} & %s & %s & %s & %s & %s & & %s & %s & %s & %s & %s \\\\\n" % (DATASET_LABELS_SHORT[dataset_id] if first else "",
                 a[1],
-                format_int(get(r,  a[0]+"-cbc", "pruned", "max_num_rows_in_comp")),
-                format_int(get(r,  a[0]+"-cbc", "pruned", "max_num_cols_in_comp")),
-                format_msecs(get(r,  a[0]+"-glpk", "pruned", "avg_solve_time")),
-                format_msecs(get(r,  a[0]+"-cbc", "pruned", "avg_solve_time")),
-                format_msecs(get(r,  a[0]+"-gurobi", "pruned", "avg_solve_time")),
-                format_int(get(r,  a[0]+"-cbc", "untangled", "max_num_rows_in_comp")),
-                format_int(get(r,  a[0]+"-cbc", "untangled", "max_num_cols_in_comp")),
-                format_msecs(get(r,  a[0]+"-glpk", "untangled", "avg_solve_time")),
-                format_msecs(get(r,  a[0]+"-cbc", "untangled", "avg_solve_time")),
-                format_msecs(get(r,  a[0]+"-gurobi", "untangled", "avg_solve_time"))
+                format_msecs(get(r,  a[0], "pruned", "avg_solve_time")),
+                format_float(get(r,  a[0], "pruned", "avg_num_crossings")),
+                format_float(get(r,  a[0], "pruned", "avg_num_separations")),
+                format_float(get(r,  a[0], "pruned", "avg_score")),
+                format_approxerr(optim, get(r, a[0] , "pruned", "avg_score")),
+                format_msecs(get(r,  a[0], "untangled", "avg_solve_time")),
+                format_float(get(r,  a[0], "untangled", "avg_num_crossings")),
+                format_float(get(r,  a[0], "untangled", "avg_num_separations")),
+                format_float(get(r,  a[0], "untangled", "avg_score")),
+                format_approxerr(optim, get(r, a[0] , "untangled", "avg_score"))
             )
             first = False
         if i < len(sort) -1:
             ret += "\\midrule\n"
 
-    ret += "\\bottomrule"
-    ret += "\\end{tabular*}}\n"
-    ret += "\\end{table}\n"
-
-    return ret
     ret += "\\bottomrule"
     ret += "\\end{tabular*}}\n"
     ret += "\\end{table}\n"
@@ -508,6 +621,12 @@ def main():
 
     if sys.argv[1] == "untangling-ilp":
         print(tbl_untangling_ilp(results))
+
+    if sys.argv[1] == "untangling-approx":
+        print(tbl_untangling_approx(results))
+
+    if sys.argv[1] == "approx-comp-avg":
+        print(tbl_approx_comp_avg(results))
 
 if __name__ == "__main__":
     main()

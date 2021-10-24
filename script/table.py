@@ -28,9 +28,12 @@ DATASET_LABELS_SHORT={
 
 def read_result(path):
     ret = {}
-    with open(path) as f:
-        full = json.load(f)
-        ret = full["properties"]["statistics"]
+    try:
+        with open(path) as f:
+            full = json.load(f)
+            ret = full["properties"]["statistics"]
+    except:
+        pass
 
     return ret
 
@@ -47,10 +50,12 @@ def read_results(path):
             rel_path = os.path.relpath(file_path, path)
             comps = rel_path.split(os.sep)
 
-            with open(file_path, 'rb') as f:
-                if not comps[0] in ret:
-                    ret[comps[0]] = {}
-                ret[comps[0]][comps[1]] = read_result(file_path)
+            if not comps[0] in ret:
+                ret[comps[0]] = {}
+
+            result = read_result(file_path)
+            if result is not None:
+                ret[comps[0]][comps[1]] = result
 
     return ret
 
@@ -295,7 +300,7 @@ def tbl_approx_comp(results):
         search_space_pruned = scinot(get(r, "greedy", "pruned", "optgraph_solution_space_size"))
 
         first = True
-        for a in [("exhaustive", "\\EXH"), ("greedy", "\\GREEDY"), ("greedy-lookahead", "\\GREEDYLA"), ("hillc", "+\\HIL"), ("anneal", "+\\ANN"), ("hillc-random", "\\HIL"), ("anneal-random", "\\ANN"),("exhaustive-sep", "\\EXHst"), ("greedy", "\\GREEDYst"), ("greedy-lookahead-sep", "\\GREEDYLAst"), ("hillc-sep", "+\\HILst"), ("anneal-sep", "+\\ANNst"), ("hillc-random-sep", "\\HILst"), ("anneal-random-sep", "\\ANNst")]:
+        for a in [("exhaustive", "\\EXH"), ("greedy", "\\GREEDY"), ("greedy-lookahead", "\\GREEDYLA"), ("hillc", "+\\HIL"), ("anneal", "+\\ANN"), ("hillc-random", "\\HIL"), ("anneal-random", "\\ANN"),("exhaustive-sep", "\\EXHst"), ("greedy-sep", "\\GREEDYst"), ("greedy-lookahead-sep", "\\GREEDYLAst"), ("hillc-sep", "+\\HILst"), ("anneal-sep", "+\\ANNst"), ("hillc-random-sep", "\\HILst"), ("anneal-random-sep", "\\ANNst")]:
             
             if "sep" in a[0]:
                 optim = get(r, "ilp-sep-cbc" , "untangled", "avg_score")
@@ -346,7 +351,7 @@ def tbl_approx_comp_avg(results):
 
     sort = sorted(sort, key=lambda d : results[d]["greedy-lookahead-sep"]["raw"]["input_num_edges"])
 
-    methods = [("greedy", "\\GREEDY"), ("greedy-lookahead", "\\GREEDYLA"), ("hillc", "+\\HIL"), ("anneal", "+\\ANN"), ("hillc-random", "\\HIL"), ("anneal-random", "\\ANN"), ("greedy", "\\GREEDYst"), ("greedy-lookahead-sep", "\\GREEDYLAst"), ("hillc-sep", "+\\HILst"), ("anneal-sep", "+\\ANNst"), ("hillc-random-sep", "\\HILst"), ("anneal-random-sep", "\\ANNst")]
+    methods = [("greedy", "\\GREEDY"), ("greedy-lookahead", "\\GREEDYLA"), ("hillc", "+\\HIL"), ("anneal", "+\\ANN"), ("hillc-random", "\\HIL"), ("anneal-random", "\\ANN"), ("greedy-sep", "\\GREEDYst"), ("greedy-lookahead-sep", "\\GREEDYLAst"), ("hillc-sep", "+\\HILst"), ("anneal-sep", "+\\ANNst"), ("hillc-random-sep", "\\HILst"), ("anneal-random-sep", "\\ANNst")]
 
     avg = {k[0]: 0 for k in methods}
     avg_pruned = {k[0]: 0 for k in methods}
@@ -543,7 +548,7 @@ def tbl_untangling_approx(results):
     ret += "  \\caption[]{Impact of full simplification on selected baseline heuristic solution times and objective function values. \\label{TBL:untangling_baseline}}\n"
     ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\normalsize\\setlength\\tabcolsep{2pt}\n"
 
-    ret +="    \\begin{tabular*}{.8\\textwidth}{@{\\extracolsep{\\fill}} l r r r r r r r r r r r r}\n"
+    ret +="    \\begin{tabular*}{1\\textwidth}{@{\\extracolsep{\\fill}} l r r r r r r r r r r r r}\n"
     ret +="    & & \\multicolumn{5}{ c }{\\footnotesize Pruned graph} & & \\multicolumn{5}{ c }{\\footnotesize Fully simplified graph} \\\\\n"
     ret +="    \\cline{3-7} \\cline{9-13} \\\\[-2ex] \\toprule\\noalign{\\smallskip}\n"
     ret +="    & & $t$ & $\\times$ & $||$ & $\\theta$ & $\\eta$ & & $t$ & $\\times$ & $\\eta$ & $||$ & $\\theta$ \\\\\\midrule\n"
@@ -582,8 +587,59 @@ def tbl_untangling_approx(results):
                 format_approxerr(optim, get(r, a[0] , "untangled", "avg_score"))
             )
             first = False
-        if i < len(sort) -1:
-            ret += "\\midrule\n"
+        
+        ret += "\\midrule\n"
+
+
+    methods_full_avg = [("greedy-lookahead-sep", "\\GREEDYLAst"), ("hillc-sep", "+\\HILst"), ("anneal-sep", "+\\ANNst"), ("hillc-random-sep", "\\HILst"), ("anneal-random-sep", "\\ANNst")]
+
+    avg_pruned = {k[0]: 0 for k in methods_full_avg}
+    avg_untangled = {k[0]: 0 for k in methods_full_avg}
+
+    for dataset_id in sort:
+        r = results[dataset_id]
+
+        for m in methods_full_avg:
+            if "sep" in m[0]:
+                optim = get(r, "ilp-sep-cbc" , "untangled", "avg_score")
+            else:
+                optim = get(r, "ilp-cbc" , "untangled", "avg_score")
+
+            if avg_untangled[m[0]] is None or get(r, m[0] , "untangled", "avg_score") is None:
+                avg_untangled[m[0]] = None
+            else:
+                avg_untangled[m[0]] += ((get(r, m[0] , "untangled", "avg_score") - optim) / optim) / len(sort)
+
+            if avg_pruned[m[0]] is None or get(r, m[0] , "pruned", "avg_score") is None:
+                avg_pruned[m[0]] = None
+            else:
+                avg_pruned[m[0]] += ((get(r, m[0] , "pruned", "avg_score") - optim) / optim) / len(sort)
+
+    first = True
+
+    for a in methods_full_avg:        
+        if "sep" in a[0]:
+            optim = get(r, "ilp-sep-cbc" , "untangled", "avg_score")
+        else:
+            optim = get(r, "ilp-cbc" , "untangled", "avg_score")
+
+        ret += "%s  & {%s} & %s & %s & %s & %s & %s & & %s & %s & %s & %s & %s \\\\\n" % ("avg" if first else "",
+                a[1],
+                "",
+                "",
+                "",
+                "",
+                format_float(avg_pruned[a[0]]),
+                "",
+                "",
+                "",
+                "",
+                format_float(avg_untangled[a[0]])
+            )
+
+        if a[0] == "anneal-random":
+            ret += "\\cline{2-5}\n"
+        first = False
 
     ret += "\\bottomrule"
     ret += "\\end{tabular*}}\n"

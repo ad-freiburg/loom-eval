@@ -1,0 +1,4 @@
+web
+*.log
+results/
+tables/

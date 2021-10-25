@@ -652,6 +652,7 @@ tables/tbl-dataset-overview.tex: $(EVAL_GREEDY)
 	@python3 script/table.py overview $(patsubst %, results/%, $(DATASETS)) > $@
 
 tables/tbl-dataset-overview.pdf: tables/tbl-dataset-overview.tex
+	@printf "[%s] Generating $@ ... \n" "$$(date -Is)"
 	@cat script/template.tex > tables/tmp
 	@cat $^ >> tables/tmp
 	@echo "\\\end{document}" >> tables/tmp
@@ -663,10 +664,11 @@ tables/tbl-main-res-time.tex: $(EVAL_GREEDY_LOOKAHEAD_SEP) $(EVAL_HILLC_RANDOM_S
 	@python3 script/table.py main-res-time $(patsubst %, results/%, $(DATASETS)) > $@
 
 tables/tbl-main-res-time.pdf: tables/tbl-main-res-time.tex
+	@printf "[%s] Generating $@ ... \n" "$$(date -Is)"
 	@cat script/template.tex > tables/tmp
 	@cat $^ >> tables/tmp
 	@echo "\\\end{document}" >> tables/tmp
-	@pdflatex -output-directory=tables -jobname=tbl-main-res-time tables/tmp
+	@pdflatex -output-directory=tables -jobname=tbl-main-res-time tables/tmp > /dev/null
 	@rm tables/tmp
 
 tables/tbl-main-res-approx-error.tex: $(EVAL_ILP_CBC_SEP_UNTANGLED) $(EVAL_GREEDY_SEP) $(EVAL_GREEDY_LOOKAHEAD_SEP) $(EVAL_GREEDY_LOOKAHEAD_SEP_UNTANGLED) $(EVAL_HILLC_SEP_UNTANGLED) $(EVAL_ANNEAL_SEP_UNTANGLED) $(EVAL_HILLC_SEP) $(EVAL_ANNEAL_SEP) $(EVAL_HILLC_RANDOM_SEP_UNTANGLED) $(EVAL_ANNEAL_RANDOM_SEP_UNTANGLED) $(EVAL_HILLC_RANDOM_SEP) $(EVAL_ANNEAL_RANDOM_SEP)
@@ -674,10 +676,11 @@ tables/tbl-main-res-approx-error.tex: $(EVAL_ILP_CBC_SEP_UNTANGLED) $(EVAL_GREED
 	@python3 script/table.py main-res-approx-error $(patsubst %, results/%, $(DATASETS)) > $@
 
 tables/tbl-main-res-approx-error.pdf: tables/tbl-main-res-approx-error.tex
+	@printf "[%s] Generating $@ ... \n" "$$(date -Is)"
 	@cat script/template.tex > tables/tmp
 	@cat $^ >> tables/tmp
 	@echo "\\\end{document}" >> tables/tmp
-	@pdflatex -output-directory=tables -jobname=tbl-main-res-approx-error tables/tmp
+	@pdflatex -output-directory=tables -jobname=tbl-main-res-approx-error tables/tmp > /dev/null
 	@rm tables/tmp
 
 tables/tbl-approx-comp.tex: $(EVAL_ILP_CBC_SEP_UNTANGLED) $(EVAL_ILP_CBC_UNTANGLED)  $(EVAL_GREEDY) $(EVAL_GREEDY_PRUNED) $(EVAL_GREEDY_SEP) $(EVAL_GREEDY_LOOKAHEAD) $(EVAL_GREEDY_LOOKAHEAD_PRUNED) $(EVAL_GREEDY_LOOKAHEAD_SEP) $(EVAL_GREEDY_LOOKAHEAD_SEP_PRUNED) $(EVAL_HILLC_SEP) $(EVAL_ANNEAL_SEP) $(EVAL_ANNEAL_SEP_PRUNED) $(EVAL_HILLC_RANDOM_SEP_PRUNED) $(EVAL_ANNEAL_RANDOM_SEP_PRUNED) $(EVAL_HILLC_RANDOM_SEP) $(EVAL_ANNEAL_RANDOM_SEP) $(EVAL_ANNEAL) $(EVAL_ANNEAL_PRUNED) $(EVAL_HILLC_RANDOM_PRUNED) $(EVAL_ANNEAL_RANDOM_PRUNED) $(EVAL_HILLC_RANDOM) $(EVAL_ANNEAL_RANDOM) $(EVAL_HILLC_SEP_PRUNED) $(EVAL_HILLC) $(EVAL_HILLC_PRUNED)
@@ -685,10 +688,11 @@ tables/tbl-approx-comp.tex: $(EVAL_ILP_CBC_SEP_UNTANGLED) $(EVAL_ILP_CBC_UNTANGL
 	@python3 script/table.py approx-comp $(patsubst %, results/%, $(DATASETS)) > $@
 
 tables/tbl-approx-comp.pdf: tables/tbl-approx-comp.tex
+	@printf "[%s] Generating $@ ... \n" "$$(date -Is)"
 	@cat script/template.tex > tables/tmp
 	@cat $^ >> tables/tmp
 	@echo "\\\end{document}" >> tables/tmp
-	@pdflatex -output-directory=tables -jobname=tbl-approx-comp tables/tmp
+	@pdflatex -output-directory=tables -jobname=tbl-approx-comp tables/tmp > /dev/null
 	@rm tables/tmp
 
 tables/tbl-ilp-comp.tex: $(EVAL_ILP_SEP_PRUNED) $(EVAL_ILP_BASELINE_SEP_PRUNED) $(EVAL_ILP_BASELINE) $(EVAL_ILP_BASELINE_SEP) $(EVAL_ILP_BASELINE_PRUNED) $(EVAL_ILP_BASELINE_SEP_PRUNED) $(EVAL_ILP) $(EVAL_ILP_SEP) $(EVAL_ILP_PRUNED)
@@ -696,10 +700,11 @@ tables/tbl-ilp-comp.tex: $(EVAL_ILP_SEP_PRUNED) $(EVAL_ILP_BASELINE_SEP_PRUNED) 
 	@python3 script/table.py ilp-comp $(patsubst %, results/%, $(DATASETS)) > $@
 
 tables/tbl-ilp-comp.pdf: tables/tbl-ilp-comp.tex
+	@printf "[%s] Generating $@ ... \n" "$$(date -Is)"
 	@cat script/template.tex > tables/tmp
 	@cat $^ >> tables/tmp
 	@echo "\\\end{document}" >> tables/tmp
-	@pdflatex -output-directory=tables -jobname=tbl-ilp-comp tables/tmp
+	@pdflatex -output-directory=tables -jobname=tbl-ilp-comp tables/tmp > /dev/null
 	@rm tables/tmp
 
 tables/tbl-untangling-graph-size.tex: $(EVAL_GREEDY_SEP) $(EVAL_GREEDY_SEP_PRUNED) $(EVAL_GREEDY_SEP_UNTANGLED)
@@ -707,10 +712,11 @@ tables/tbl-untangling-graph-size.tex: $(EVAL_GREEDY_SEP) $(EVAL_GREEDY_SEP_PRUNE
 	@python3 script/table.py untangling-graph-size $(patsubst %, results/%, $(DATASETS)) > $@
 
 tables/tbl-untangling-graph-size.pdf: tables/tbl-untangling-graph-size.tex
+	@printf "[%s] Generating $@ ... \n" "$$(date -Is)"
 	@cat script/template.tex > tables/tmp
 	@cat $^ >> tables/tmp
 	@echo "\\\end{document}" >> tables/tmp
-	@pdflatex -output-directory=tables -jobname=tbl-untangling-graph-size tables/tmp
+	@pdflatex -output-directory=tables -jobname=tbl-untangling-graph-size tables/tmp > /dev/null
 	@rm tables/tmp
 
 tables/tbl-untangling-ilp.tex: $(EVAL_ILP_SEP_PRUNED) $(EVAL_ILP_SEP_UNTANGLED) $(EVAL_ILP_PRUNED) $(EVAL_ILP_UNTANGLED)
@@ -718,10 +724,11 @@ tables/tbl-untangling-ilp.tex: $(EVAL_ILP_SEP_PRUNED) $(EVAL_ILP_SEP_UNTANGLED) 
 	@python3 script/table.py untangling-ilp $(patsubst %, results/%, $(DATASETS)) > $@
 
 tables/tbl-untangling-ilp.pdf: tables/tbl-untangling-ilp.tex
+	@printf "[%s] Generating $@ ... \n" "$$(date -Is)"
 	@cat script/template.tex > tables/tmp
 	@cat $^ >> tables/tmp
 	@echo "\\\end{document}" >> tables/tmp
-	@pdflatex -output-directory=tables -jobname=tbl-untangling-ilp tables/tmp
+	@pdflatex -output-directory=tables -jobname=tbl-untangling-ilp tables/tmp > /dev/null
 	@rm tables/tmp
 
 tables/tbl-untangling-approx.tex:  $(EVAL_ILP_CBC_SEP_UNTANGLED) $(EVAL_GREEDY_LOOKAHEAD_SEP_PRUNED) $(EVAL_GREEDY_LOOKAHEAD_SEP_UNTANGLED) $(EVAL_HILLC_SEP_PRUNED) $(EVAL_HILLC_SEP_UNTANGLED) $(EVAL_ANNEAL_SEP_PRUNED) $(EVAL_ANNEAL_SEP_UNTANGLED) $(EVAL_HILLC_RANDOM_SEP_PRUNED) $(EVAL_HILLC_RANDOM_SEP_UNTANGLED) $(EVAL_ANNEAL_RANDOM_SEP_PRUNED) $(EVAL_ANNEAL_RANDOM_SEP_UNTANGLED)
@@ -729,10 +736,11 @@ tables/tbl-untangling-approx.tex:  $(EVAL_ILP_CBC_SEP_UNTANGLED) $(EVAL_GREEDY_L
 	@python3 script/table.py untangling-approx $(patsubst %, results/%, $(DATASETS)) > $@
 
 tables/tbl-untangling-approx.pdf: tables/tbl-untangling-approx.tex
+	@printf "[%s] Generating $@ ... \n" "$$(date -Is)"
 	@cat script/template.tex > tables/tmp
 	@cat $^ >> tables/tmp
 	@echo "\\\end{document}" >> tables/tmp
-	@pdflatex -output-directory=tables -jobname=tbl-untangling-approx tables/tmp
+	@pdflatex -output-directory=tables -jobname=tbl-untangling-approx tables/tmp > /dev/null
 	@rm tables/tmp
 
 tables/tbl-approx-comp-avg.tex: $(EVAL_ILP_CBC_SEP_UNTANGLED) $(EVAL_ILP_CBC_UNTANGLED)  $(EVAL_GREEDY) $(EVAL_GREEDY_PRUNED) $(EVAL_GREEDY_SEP) $(EVAL_GREEDY_LOOKAHEAD) $(EVAL_GREEDY_LOOKAHEAD_PRUNED) $(EVAL_GREEDY_LOOKAHEAD_SEP) $(EVAL_HILLC) $(EVAL_HILLC_PRUNED) $(EVAL_HILLC_RANDOM_PRUNED) $(EVAL_HILLC_SEP) $(EVAL_ANNEAL)  $(EVAL_ANNEAL_SEP) $(EVAL_ANNEAL_SEP_PRUNED) $(EVAL_HILLC_RANDOM_SEP_PRUNED) $(EVAL_ANNEAL_RANDOM_SEP_PRUNED) $(EVAL_HILLC_RANDOM_SEP) $(EVAL_ANNEAL_RANDOM_SEP) $(EVAL_ANNEAL) $(EVAL_ANNEAL_PRUNED) $(EVAL_HILLC_RANDOM_PRUNED) $(EVAL_ANNEAL_RANDOM_PRUNED) $(EVAL_HILLC_RANDOM) $(EVAL_ANNEAL_RANDOM)
@@ -740,6 +748,7 @@ tables/tbl-approx-comp-avg.tex: $(EVAL_ILP_CBC_SEP_UNTANGLED) $(EVAL_ILP_CBC_UNT
 	@python3 script/table.py approx-comp-avg $(patsubst %, results/%, $(DATASETS)) > $@
 
 tables/tbl-approx-comp-avg.pdf: tables/tbl-approx-comp-avg.tex
+	@printf "[%s] Generating $@ ... \n" "$$(date -Is)"
 	@cat script/template.tex > tables/tmp
 	@cat $^ >> tables/tmp
 	@echo "\\\end{document}" >> tables/tmp

@@ -146,7 +146,7 @@ def format_approxerr(perfect, approx):
 def tbl_overview(results):
     ret = "\\begin{table}\n"
     ret += "  \\centering\n"
-    ret += "  \\caption[]{Line graphs used in our experimental evaluation. Under $|{\\cal S}|$ we give the number of station nodes in the graph. Under  $|V|$ we give the numer of nodes (including station nodes). Under $|E|$ we give the number of edges. Under $|{\\cal L}|$ we give the number of lines. $M$ is the maximum number of lines per edge. $D$ is the maximum node degree. $|\\Omega|$ is the line-ordering search space size on the original line graph. \\label{TBL:loom:datasets}}\n"
+    ret += "  \\caption[]{Line graphs used in our experimental evaluation. Under $|{\\cal S}|$ we give the number of station nodes in the graph. Under  $|V|$ we give the numer of nodes (including station nodes). Under $|E|$ we give the number of edges. Under $|{\\cal L}|$ we give the number of lines. $M$ is the maximum number of lines per edge. $D$ is the maximum node degree. $|\\Omega|$ is the line-ordering search space size on the original line graph. \\label{TBL:loom:dataset-overview}}\n"
     ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\normalsize\\setlength\\tabcolsep{3pt}\n"
 
     ret += "  \\begin{tabular*}{0.8\\textwidth}{@{\\extracolsep{\\fill}} l r r r r r r r c} \\toprule\n       & $|{\\cal S}|$ & $|V|$ & $|E|$ & $|{\\cal L}|$ & $M$ & $D$ & $|\\Omega|$ \\\\\\midrule\n"
@@ -179,7 +179,7 @@ def tbl_overview(results):
 def tbl_main_res_time(results):
     ret = "\\begin{table}\n"
     ret += "  \\centering\n"
-    ret += "  \\caption[]{Main results for the running times of a selection of our methods on all test datasets. \\TODO{how are they selected?} \\label{TBL:loom:main_results_time}}\n"
+    ret += "  \\caption[]{Main results for the running times of a selection of our methods on all test datasets. \\TODO{how are they selected?} \\label{TBL:loom:main-res-time}}\n"
     ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\normalsize\\setlength\\tabcolsep{5pt}\n"
 
     ret += "  \\begin{tabular*}{1\\textwidth}{@{\\extracolsep{\\fill}} l r r r r r r r r r r r}\n"
@@ -230,7 +230,7 @@ def tbl_main_res_time(results):
 def tbl_main_res_approx_error(results):
     ret = "\\begin{table}\n"
     ret += "  \\centering\n"
-    ret += "  \\caption[]{Main results for the relative approximation errors ($\\frac{\\theta_{\\text{approx}}}{\\theta} - 1$) of a selection of our heuristic methods on all test datasets. \\TODO{how are they selected?} \label{TBL:loom:main_results_approx}}\n"
+    ret += "  \\caption[]{Main results for the relative approximation error $\\eta$ ($=\\frac{\\theta_{\\text{approx}}}{\\theta} - 1$) of a selection of our heuristic methods on all test datasets. \\TODO{how are they selected?} \\label{TBL:loom:main-res-approx-error}}\n"
     ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\normalsize\\setlength\\tabcolsep{5pt}\n"
 
     ret += "  \\begin{tabular*}{1\\textwidth}{@{\\extracolsep{\\fill}} l r r r r r r r r r r r r}\\toprule\n"
@@ -365,7 +365,7 @@ def bold_if(s, t):
 def tbl_approx_comp(results):
     ret = "\\begin{table}\n"
     ret += "  \\centering\n"
-    ret += "  \\caption[]{\\TODO{caption} \\label{TBL:loom:approx_comp}}\n"
+    ret += "  \\caption[]{\\TODO{caption} \\label{TBL:loom:approx-comp}}\n"
     ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\footnotesize\\setlength\\tabcolsep{5pt}\n"
 
     ret += "    \\begin{tabular*}{\\textwidth}{@{\\extracolsep{\\fill}} l@{\\hskip 2mm} r@{\\hskip 3mm} r r r@{\\hskip 2.5mm} r r r r r@{\\hskip 1.5mm}r@{\\hskip 1mm}r r r r}\n"
@@ -470,7 +470,7 @@ def tbl_approx_comp(results):
 def tbl_approx_comp_avg(results):
     ret = "\\begin{table}\n"
     ret += "  \\centering\n"
-    ret += "  \\caption[]{\\TODO{caption} \\label{TBL:loom:approx_comp_avg}}\n"
+    ret += "  \\caption[]{\\TODO{caption} \\label{TBL:loom:approx-comp-avg}}\n"
     ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\normalsize\\setlength\\tabcolsep{5pt}\n"
 
     ret += "    \\begin{tabular*}{0.6\\textwidth}{@{\\extracolsep{\\fill}} l@{\\hskip 2mm} r r r r}\n"
@@ -560,7 +560,7 @@ def tbl_approx_comp_avg(results):
 def tbl_ilp_comp(results):
     ret = "\\begin{table}\n"
     ret += "  \\centering\n"
-    ret += "  \\caption[]{ILP Dimensions (given as rows$\\times$ cols) and solution times for all our ILP variants on the raw input graph and on the pruned \\& cut input graph. If a graph had multiple components, we optimized them separately, and the dimensions for the largest component are given, but solution times are always cumulative. \label{TBL:loom:ilp_comp}}\n"
+    ret += "  \\caption[]{ILP Dimensions (given as rows$\\times$ cols) and solution times for all our ILP variants on the raw input graph and on the pruned \\& cut input graph. If a graph had multiple components, we optimized them separately, and the dimensions for the largest component are given, but solution times are always cumulative. \\label{TBL:loom:ilp-comp}}\n"
     ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\footnotesize\\setlength\\tabcolsep{2pt}\n"
 
     ret += "    \\begin{tabular*}{\\textwidth}{@{\\extracolsep{\\fill}} l@{\\hskip 1.2mm} r r r r@{\\hskip 2.5mm} r r r r r@{\\hskip 1.5mm}r@{\\hskip 1mm}r r r}\n"
@@ -621,7 +621,7 @@ def tbl_ilp_comp(results):
 def tbl_untangling_graph_size(results):
     ret = "\\begin{table}\n"
     ret += "  \\centering\n"
-    ret += "  \\caption[]{Effects of full line graph simplification on line graph dimensions. $|V|$ is the number of nodes, $|E|$ is the number of edges, $M$ is the maximum number of lines per edge, $|\\Omega|$ is the search space size (sum of the search space sizes of the graph components), $C$ is the number of nontrivial (more than 2 nodes) graph components, $C^1$ is the number of nontrivial graph components with a search space size of 1 (not requiring further optimization).\\label{TBL:loom:untangling}}\n"
+    ret += "  \\caption[]{Effects of full line graph simplification on line graph dimensions. $|V|$ is the number of nodes, $|E|$ is the number of edges, $M$ is the maximum number of lines per edge, $|\\Omega|$ is the search space size (sum of the search space sizes of the graph components), $C$ is the number of nontrivial (more than 2 nodes) graph components, $C^1$ is the number of nontrivial graph components with a search space size of 1 (not requiring further optimization).\\label{TBL:loom:untangling-graph-size}}\n"
     ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\normalsize\\setlength\\tabcolsep{2pt}\n"
 
     ret += "    \\begin{tabular*}{\\textwidth}{@{\\extracolsep{\\fill}} l r r r r r r r r r r r r r r r r r r r r r r}\n"
@@ -688,7 +688,7 @@ def tbl_untangling_graph_size(results):
 def tbl_untangling_ilp(results):
     ret = "\\begin{table}\n"
     ret += "  \\centering\n"
-    ret += "  \\caption[]{Impact of full simplification on ILP sizes and solution times.\\label{TBL:loom:untangling_solve} }\n"
+    ret += "  \\caption[]{Impact of full simplification on ILP sizes and solution times.\\label{TBL:loom:untangling-ilp} }\n"
     ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\normalsize\\setlength\\tabcolsep{2pt}\n"
 
     ret += "    \\begin{tabular*}{1\\textwidth}{@{\\extracolsep{\\fill}} l r r r r r r r r r r r r r r}\n"
@@ -749,7 +749,7 @@ def tbl_untangling_ilp(results):
 def tbl_untangling_approx(results):
     ret = "\\begin{table}\n"
     ret += "  \\centering\n"
-    ret += "  \\caption[]{Impact of full simplification on selected baseline heuristic solution times and objective function values. \\label{TBL:loom:untangling_baseline}}\n"
+    ret += "  \\caption[]{Impact of full simplification on selected baseline heuristic solution times and objective function values. \\label{TBL:loom:untangling-approx}}\n"
     ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\normalsize\\setlength\\tabcolsep{2pt}\n"
 
     ret += "    \\begin{tabular*}{1\\textwidth}{@{\\extracolsep{\\fill}} l r r r r r r r r r r r r}\n"

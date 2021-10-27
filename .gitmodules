@@ -1,0 +1,3 @@
+[submodule "loom"]
+	path = loom
+	url = http://git.patrickbrosi.de/patrick/loom.git

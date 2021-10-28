@@ -33,6 +33,8 @@ ENV LD_LIBRARY_PATH $GUROBI_HOME/lib
 
 ADD loom /loom
 
+ENV GRB_LICENSE_FILE /output/gurobi.lic
+
 RUN cd /loom && rm -rf build && mkdir build && cd build && cmake .. && make -j20 loom
 
 RUN mkdir -p /output
@@ -42,8 +44,7 @@ COPY README.md /
 ADD script /script
 ADD datasets /datasets
 
-ENV GRB_LICENSE_FILE /output/gurobi.lic
-
 WORKDIR /
 
-ENTRYPOINT ["make", "RESULTS_DIR=/output/results", "TABLES_DIR=/output/tables", "ILP_CACHE_DIR=/tmp"]
+CMD ["bash"]
+#ENTRYPOINT ["make", "RESULTS_DIR=/output/results", "TABLES_DIR=/output/tables", "ILP_CACHE_DIR=/tmp"]

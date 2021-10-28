@@ -26,12 +26,12 @@ GLOB_ARGS_UNTANGLED = --prune=0 --untangle=1
 
 DATASETS := $(basename $(notdir $(wildcard datasets/*.json)))
 
-EVAL_EXH := $(patsubst %, $(RESULTS_DIR)/%/exh/raw/res.json, $(DATASETS))
-EVAL_EXH_SEP := $(patsubst %, $(RESULTS_DIR)/%/exh-sep/raw/res.json, $(DATASETS))
-EVAL_EXH_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/exh/pruned/res.json, $(DATASETS))
-EVAL_EXH_SEP_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/exh-sep/pruned/res.json, $(DATASETS))
-EVAL_EXH_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/exh/untangled/res.json, $(DATASETS))
-EVAL_EXH_SEP_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/exh-sep/untangled/res.json, $(DATASETS))
+EVAL_EXH := $(patsubst %, $(RESULTS_DIR)/%/exhaustive/raw/res.json, $(DATASETS))
+EVAL_EXH_SEP := $(patsubst %, $(RESULTS_DIR)/%/exhaustive-sep/raw/res.json, $(DATASETS))
+EVAL_EXH_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/exhaustive/pruned/res.json, $(DATASETS))
+EVAL_EXH_SEP_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/exhaustive-sep/pruned/res.json, $(DATASETS))
+EVAL_EXH_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/exhaustive/untangled/res.json, $(DATASETS))
+EVAL_EXH_SEP_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/exhaustive-sep/untangled/res.json, $(DATASETS))
 
 EVAL_ILP_GLPK_BASELINE := $(patsubst %, $(RESULTS_DIR)/%/ilp-baseline-glpk/raw/res.json, $(DATASETS))
 EVAL_ILP_GLPK_BASELINE_SEP := $(patsubst %, $(RESULTS_DIR)/%/ilp-baseline-sep-glpk/raw/res.json, $(DATASETS))
@@ -438,6 +438,57 @@ $(RESULTS_DIR)/%/ilp-sep-gurobi/untangled/res.json: datasets/%.json
 
 # _____________________________________________________________________________
 
+#### EXHAUSTIVE
+
+### on raw graph
+$(RESULTS_DIR)/%/exhaustive/raw/res.json: datasets/%.json
+	@printf "[%s] Calculating results for exhaustive w/o separation penality on raw graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@(timeout $(OVERALL_TIMEOUT) $(LOOM) $(GLOB_ARGS) $(GLOB_ARGS_RAW) $(GLOB_ARGS_NOSEP) --optim-method=exhaust < $< > $@ 2> $(basename $@).log) || (echo "[]" > $@ && printf "[%s] An error or timeout occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+$(RESULTS_DIR)/%/exhaustive-sep/raw/res.json: datasets/%.json
+	@printf "[%s] Calculating results for exhaustive with separation penality on raw graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@(timeout $(OVERALL_TIMEOUT) $(LOOM) $(GLOB_ARGS) $(GLOB_ARGS_SEP) $(GLOB_ARGS_RAW) --optim-method=exhaust < $< > $@ 2> $(basename $@).log) || (echo "[]" > $@ && printf "[%s] An error or timeout occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+### on pruned graph
+$(RESULTS_DIR)/%/exhaustive/pruned/res.json: datasets/%.json
+	@printf "[%s] Calculating results for exhaustive w/o separation penality on pruned graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@(timeout $(OVERALL_TIMEOUT) $(LOOM) $(GLOB_ARGS_PRUNED) $(GLOB_ARGS) $(GLOB_ARGS_NOSEP) --optim-method=exhaust < $< > $@ 2> $(basename $@).log) || (echo "[]" > $@ && printf "[%s] An error or timeout occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+
+$(RESULTS_DIR)/%/exhaustive-sep/pruned/res.json: datasets/%.json
+	@printf "[%s] Calculating results for exhaustive with separation penality on pruned graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@(timeout $(OVERALL_TIMEOUT) $(LOOM) $(GLOB_ARGS_PRUNED) $(GLOB_ARGS) $(GLOB_ARGS_SEP) --optim-method=exhaust < $< > $@ 2> $(basename $@).log) || (echo "[]" > $@ && printf "[%s] An error or timeout occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+### on untangled graph
+$(RESULTS_DIR)/%/exhaustive/untangled/res.json: datasets/%.json
+	@printf "[%s] Calculating results for exhaustive w/o separation penality on untangled graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@(timeout $(OVERALL_TIMEOUT) $(LOOM) $(GLOB_ARGS_UNTANGLED)  $(GLOB_ARGS) $(GLOB_ARGS_NOSEP) --optim-method=exhaust < $< > $@ 2> $(basename $@).log) || (echo "[]" > $@ && printf "[%s] An error or timeout occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+
+$(RESULTS_DIR)/%/exhaustive-sep/untangled/res.json: datasets/%.json
+	@printf "[%s] Calculating results for exhaustive with separation penality on untangled graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@(timeout $(OVERALL_TIMEOUT) $(LOOM) $(GLOB_ARGS_UNTANGLED) $(GLOB_ARGS) $(GLOB_ARGS_SEP) --optim-method=exhaust < $< > $@ 2> $(basename $@).log) || (echo "[]" > $@ && printf "[%s] An error or timeout occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+# _____________________________________________________________________________
+
 
 #### GREEDY
 
@@ -799,7 +850,7 @@ $(TABLES_DIR)/tbl-main-res-approx-error.pdf: $(TABLES_DIR)/tbl-main-res-approx-e
 	@pdflatex -output-directory=$(TABLES_DIR) -jobname=tbl-main-res-approx-error $(TABLES_DIR)/tmp > /dev/null
 	@rm $(TABLES_DIR)/tmp
 
-$(TABLES_DIR)/tbl-approx-comp.tex: $(EVAL_ILP_CBC_SEP_UNTANGLED) $(EVAL_ILP_CBC_UNTANGLED)  $(EVAL_GREEDY) $(EVAL_GREEDY_PRUNED) $(EVAL_GREEDY_SEP) $(EVAL_GREEDY_LOOKAHEAD) $(EVAL_GREEDY_LOOKAHEAD_PRUNED) $(EVAL_GREEDY_LOOKAHEAD_SEP) $(EVAL_GREEDY_LOOKAHEAD_SEP_PRUNED) $(EVAL_HILLC_SEP) $(EVAL_ANNEAL_SEP) $(EVAL_ANNEAL_SEP_PRUNED) $(EVAL_HILLC_RANDOM_SEP_PRUNED) $(EVAL_ANNEAL_RANDOM_SEP_PRUNED) $(EVAL_HILLC_RANDOM_SEP) $(EVAL_ANNEAL_RANDOM_SEP) $(EVAL_ANNEAL) $(EVAL_ANNEAL_PRUNED) $(EVAL_HILLC_RANDOM_PRUNED) $(EVAL_ANNEAL_RANDOM_PRUNED) $(EVAL_HILLC_RANDOM) $(EVAL_ANNEAL_RANDOM) $(EVAL_HILLC_SEP_PRUNED) $(EVAL_HILLC) $(EVAL_HILLC_PRUNED)
+$(TABLES_DIR)/tbl-approx-comp.tex: $(EVAL_EXH) $(EVAL_EXH_SEP) $(EVAL_EXH_PRUNED) $(EVAL_EXH_SEP_PRUNED) $(EVAL_ILP_CBC_SEP_UNTANGLED) $(EVAL_ILP_CBC_UNTANGLED)  $(EVAL_GREEDY) $(EVAL_GREEDY_PRUNED) $(EVAL_GREEDY_SEP) $(EVAL_GREEDY_LOOKAHEAD) $(EVAL_GREEDY_LOOKAHEAD_PRUNED) $(EVAL_GREEDY_LOOKAHEAD_SEP) $(EVAL_GREEDY_LOOKAHEAD_SEP_PRUNED) $(EVAL_HILLC_SEP) $(EVAL_ANNEAL_SEP) $(EVAL_ANNEAL_SEP_PRUNED) $(EVAL_HILLC_RANDOM_SEP_PRUNED) $(EVAL_ANNEAL_RANDOM_SEP_PRUNED) $(EVAL_HILLC_RANDOM_SEP) $(EVAL_ANNEAL_RANDOM_SEP) $(EVAL_ANNEAL) $(EVAL_ANNEAL_PRUNED) $(EVAL_HILLC_RANDOM_PRUNED) $(EVAL_ANNEAL_RANDOM_PRUNED) $(EVAL_HILLC_RANDOM) $(EVAL_ANNEAL_RANDOM) $(EVAL_HILLC_SEP_PRUNED) $(EVAL_HILLC) $(EVAL_HILLC_PRUNED)
 	@mkdir -p $(TABLES_DIR)
 	@python3 script/table.py approx-comp $(patsubst %, $(RESULTS_DIR)/%, $(DATASETS)) > $@
 
@@ -847,7 +898,7 @@ $(TABLES_DIR)/tbl-untangling-ilp.pdf: $(TABLES_DIR)/tbl-untangling-ilp.tex
 	@pdflatex -output-directory=$(TABLES_DIR) -jobname=tbl-untangling-ilp $(TABLES_DIR)/tmp > /dev/null
 	@rm $(TABLES_DIR)/tmp
 
-$(TABLES_DIR)/tbl-untangling-approx.tex:  $(EVAL_ILP_CBC_SEP_UNTANGLED) $(EVAL_GREEDY_LOOKAHEAD_SEP_PRUNED) $(EVAL_GREEDY_LOOKAHEAD_SEP_UNTANGLED) $(EVAL_HILLC_SEP_PRUNED) $(EVAL_HILLC_SEP_UNTANGLED) $(EVAL_ANNEAL_SEP_PRUNED) $(EVAL_ANNEAL_SEP_UNTANGLED) $(EVAL_HILLC_RANDOM_SEP_PRUNED) $(EVAL_HILLC_RANDOM_SEP_UNTANGLED) $(EVAL_ANNEAL_RANDOM_SEP_PRUNED) $(EVAL_ANNEAL_RANDOM_SEP_UNTANGLED)
+$(TABLES_DIR)/tbl-untangling-approx.tex: $(EVAL_EXH_PRUNED) $(EVAL_EXH_SEP_PRUNED) $(EVAL_EXH_UNTANGLED) $(EVAL_EXH_SEP_UNTANGLED) $(EVAL_ILP_CBC_SEP_UNTANGLED) $(EVAL_GREEDY_LOOKAHEAD_SEP_PRUNED) $(EVAL_GREEDY_LOOKAHEAD_SEP_UNTANGLED) $(EVAL_HILLC_SEP_PRUNED) $(EVAL_HILLC_SEP_UNTANGLED) $(EVAL_ANNEAL_SEP_PRUNED) $(EVAL_ANNEAL_SEP_UNTANGLED) $(EVAL_HILLC_RANDOM_SEP_PRUNED) $(EVAL_HILLC_RANDOM_SEP_UNTANGLED) $(EVAL_ANNEAL_RANDOM_SEP_PRUNED) $(EVAL_ANNEAL_RANDOM_SEP_UNTANGLED)
 	@mkdir -p $(TABLES_DIR)
 	@python3 script/table.py untangling-approx $(patsubst %, $(RESULTS_DIR)/%, $(DATASETS)) > $@
 
@@ -859,9 +910,9 @@ $(TABLES_DIR)/tbl-untangling-approx.pdf: $(TABLES_DIR)/tbl-untangling-approx.tex
 	@pdflatex -output-directory=$(TABLES_DIR) -jobname=tbl-untangling-approx $(TABLES_DIR)/tmp > /dev/null
 	@rm $(TABLES_DIR)/tmp
 
-$(TABLES_DIR)/tbl-approx-comp-avg.tex: $(EVAL_ILP_CBC_SEP_UNTANGLED) $(EVAL_ILP_CBC_UNTANGLED)  $(EVAL_GREEDY) $(EVAL_GREEDY_PRUNED) $(EVAL_GREEDY_SEP) $(EVAL_GREEDY_LOOKAHEAD) $(EVAL_GREEDY_LOOKAHEAD_PRUNED) $(EVAL_GREEDY_LOOKAHEAD_SEP) $(EVAL_HILLC) $(EVAL_HILLC_PRUNED) $(EVAL_HILLC_RANDOM_PRUNED) $(EVAL_HILLC_SEP) $(EVAL_ANNEAL)  $(EVAL_ANNEAL_SEP) $(EVAL_ANNEAL_SEP_PRUNED) $(EVAL_HILLC_RANDOM_SEP_PRUNED) $(EVAL_ANNEAL_RANDOM_SEP_PRUNED) $(EVAL_HILLC_RANDOM_SEP) $(EVAL_ANNEAL_RANDOM_SEP) $(EVAL_ANNEAL) $(EVAL_ANNEAL_PRUNED) $(EVAL_HILLC_RANDOM_PRUNED) $(EVAL_ANNEAL_RANDOM_PRUNED) $(EVAL_HILLC_RANDOM) $(EVAL_ANNEAL_RANDOM)
+$(TABLES_DIR)/tbl-approx-comp-avg.tex: $(EVAL_ILP_CBC_SEP_UNTANGLED) $(EVAL_ILP_CBC_UNTANGLED)  $(EVAL_GREEDY) $(EVAL_GREEDY_PRUNED) $(EVAL_GREEDY_SEP) $(EVAL_GREEDY_SEP_PRUNED) $(EVAL_GREEDY_LOOKAHEAD) $(EVAL_GREEDY_LOOKAHEAD_PRUNED) $(EVAL_GREEDY_LOOKAHEAD_SEP) $(EVAL_GREEDY_LOOKAHEAD_SEP_PRUNED) $(EVAL_HILLC) $(EVAL_HILLC_PRUNED) $(EVAL_HILLC_RANDOM_PRUNED) $(EVAL_HILLC_SEP) $(EVAL_HILLC_SEP_PRUNED) $(EVAL_ANNEAL)  $(EVAL_ANNEAL_SEP) $(EVAL_ANNEAL_SEP_PRUNED) $(EVAL_HILLC_RANDOM_SEP_PRUNED) $(EVAL_ANNEAL_RANDOM_SEP_PRUNED) $(EVAL_HILLC_RANDOM_SEP) $(EVAL_ANNEAL_RANDOM_SEP) $(EVAL_ANNEAL) $(EVAL_ANNEAL_PRUNED) $(EVAL_HILLC_RANDOM_PRUNED) $(EVAL_ANNEAL_RANDOM_PRUNED) $(EVAL_HILLC_RANDOM) $(EVAL_ANNEAL_RANDOM)
 	@mkdir -p $(TABLES_DIR)
-	@python3 script/table.py approx-comp-avg $(patsubst %, $(RESULTS_DIR)/%, $(DATASETS)) > $@
+	python3 script/table.py approx-comp-avg $(patsubst %, $(RESULTS_DIR)/%, $(DATASETS)) > $@
 
 $(TABLES_DIR)/tbl-approx-comp-avg.pdf: $(TABLES_DIR)/tbl-approx-comp-avg.tex
 	@printf "[%s] Generating $@ ... \n" "$$(date -Is)"

@@ -516,7 +516,6 @@ def tbl_approx_comp_avg(results):
 
     for dataset_id in sort:
         r = results[dataset_id]
-        print(r["greedy"]["raw"])
 
         for m in methods:
             if "sep" in m[0]:

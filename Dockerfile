@@ -17,6 +17,9 @@ RUN apt-get update \
        make \
        cmake \
 	   texlive-base \
+	   texlive-science \
+	   texlive-latex-extra \
+	   texlive-latex-base \
        libboost-all-dev \
 	   g++ \
        git \
@@ -46,5 +49,4 @@ ADD datasets /datasets
 
 WORKDIR /
 
-CMD ["bash"]
-#ENTRYPOINT ["make", "RESULTS_DIR=/output/results", "TABLES_DIR=/output/tables", "ILP_CACHE_DIR=/tmp"]
+ENTRYPOINT ["make", "RESULTS_DIR=/output/results", "TABLES_DIR=/output/tables", "ILP_CACHE_DIR=/tmp"]

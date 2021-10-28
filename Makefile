@@ -878,7 +878,8 @@ check:
 	@echo "glpk version:  " `glpsol --version | head -n1 | cut -d'v' -f3`
 	@echo "CBC version:   " `echo "x" | cbc | head -n2 | tail -n1 | cut -d' ' -f2`
 	@echo "gurobi version:" `gurobi_cl --version | head -n1 | cut -dv -f3 | cut -d' ' -f1`
-	@echo "gurobi license:" `gurobi_cl --license | head -1`
+	@echo "gurobi license:"
+	@gurobi_cl --license
 	@echo "loom version:" `$(LOOM) --version`
 	@echo "results dir:" $(RESULTS_DIR)
 	@echo "timeout:" $(OVERALL_TIMEOUT)s

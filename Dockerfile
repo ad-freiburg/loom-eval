@@ -30,18 +30,19 @@ RUN apt-get update \
 ENV GUROBI_HOME /opt/gurobi/linux64
 ENV PATH $PATH:$GUROBI_HOME/bin:/loom/build
 ENV LD_LIBRARY_PATH $GUROBI_HOME/lib
-ENV GRB_LICENSE_FILE /external/gurobi.lic
+
+ADD loom /loom
+
+RUN cd /loom && rm -rf build && mkdir build && cd build && cmake .. && make -j20 loom
+
+RUN mkdir -p /output
 
 COPY Makefile /
 COPY README.md /
 ADD script /script
 ADD datasets /datasets
 
-ADD loom /loom
-
-RUN cd /loom && rm -rf build && mkdir build && cd build && cmake .. && make loom
-
-RUN mkdir -p /output
+ENV GRB_LICENSE_FILE /output/gurobi.lic
 
 WORKDIR /
 

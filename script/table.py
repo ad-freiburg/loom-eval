@@ -470,13 +470,13 @@ def tbl_approx_comp(results):
 def tbl_approx_comp_avg(results):
     ret = "\\begin{table}\n"
     ret += "  \\centering\n"
-    ret += "  \\caption[]{\\TODO{caption} \\label{TBL:loom:approx-comp-avg}}\n"
+    ret += "  \\caption[]{Average solution time (t) and relative approximation errors (\\eta) of all our heuristic approaches, over all datasets. \\label{TBL:loom:approx-comp-avg}}\n"
     ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\normalsize\\setlength\\tabcolsep{5pt}\n"
 
-    ret += "    \\begin{tabular*}{0.6\\textwidth}{@{\\extracolsep{\\fill}} l@{\\hskip 2mm} r r r r}\n"
-    ret += "    && \\multicolumn{1}{c}{\\footnotesize On baseline graph} & & \\multicolumn{1}{c}{\\footnotesize On pruned \\& cut graph} \\\\\n"
-    ret += "    \\cline{2-3} \\cline{4-5} \\\\[-2ex] \\toprule\n"
-    ret += "    && $\\eta$ && $\\eta$ \\\\\\midrule\n"
+    ret += "    \\begin{tabular*}{0.8\\textwidth}{@{\\extracolsep{\\fill}} l@{\\hskip 2mm} r r r r r r}\n"
+    ret += "    && \\multicolumn{2}{c}{\\footnotesize On baseline graph} & & \\multicolumn{2}{c}{\\footnotesize On pruned \\& cut graph} \\\\\n"
+    ret += "    \\cline{3-4} \\cline{6-7} \\\\[-2ex] \\toprule\n"
+    ret += "    && t & $\\eta$ && t & $\\eta$ \\\\\\midrule\n"
 
     sort = []
     for dataset_id in results:
@@ -514,6 +514,33 @@ def tbl_approx_comp_avg(results):
     avg = {k[0]: 0 for k in methods}
     avg_pruned = {k[0]: 0 for k in methods}
 
+    avg_t = {k[0]: 0 for k in methods}
+    avg_t_pruned = {k[0]: 0 for k in methods}
+
+    best_t = 999999999
+    best_t_m = None
+
+    best_t_pruned = 999999999
+    best_t_m_pruned = None
+
+    best_t_sep = 999999999
+    best_t_m_sep = None
+
+    best_t_sep_pruned = 999999999
+    best_t_m_sep_pruned = None
+
+    best_score = 999999999
+    best_score_m = None
+
+    best_score_pruned = 999999999
+    best_score_m_pruned = None
+
+    best_score_sep = 999999999
+    best_score_m_sep = None
+
+    best_score_sep_pruned = 999999999
+    best_score_m_sep_pruned = None
+
     for dataset_id in sort:
         r = results[dataset_id]
 
@@ -535,19 +562,73 @@ def tbl_approx_comp_avg(results):
                 avg_pruned[m[0]] += ((get(r, m[0], "pruned",
                                           "avg_score") - optim) / optim) / len(sort)
 
+            if avg_t[m[0]] is None or get(r, m[0], "raw", "avg_solve_time") is None:
+                avg_t[m[0]] = None
+            else:
+                t = get(r, m[0], "raw", "avg_solve_time") / len(sort)
+                avg_t[m[0]] += t
+
+            if avg_t_pruned[m[0]] is None or get(r, m[0], "pruned", "avg_solve_time") is None:
+                avg_t_pruned[m[0]] = None
+            else:
+                t = get(r, m[0], "pruned", "avg_solve_time") / len(sort)
+                avg_t_pruned[m[0]] += t
+
+    for m in methods: 
+        if "sep" in m[0]:
+            t = avg_t[m[0]]                     
+            if t < best_t_sep:
+                best_t_sep = t
+                best_t_m_sep = m[0]
+            t = avg_t_pruned[m[0]]                     
+            if t < best_t_sep_pruned:
+                best_t_sep_pruned = t
+                best_t_m_sep_pruned = m[0]
+        else:
+            t = avg_t[m[0]]                     
+            if t < best_t:
+                best_t = t
+                best_t_m = m[0]
+            t = avg_t_pruned[m[0]]                     
+            if t < best_t_pruned:
+                best_t_pruned = t
+                best_t_m_pruned = m[0]
+
+        if "sep" in m[0]:
+            t = avg[m[0]]                     
+            if t < best_score_sep:
+                best_score_sep = t
+                best_score_m_sep = m[0]
+            t = avg_pruned[m[0]]                     
+            if t < best_score_sep_pruned:
+                best_score_sep_pruned = t
+                best_score_m_sep_pruned = m[0]
+        else:
+            t = avg[m[0]]                     
+            if t < best_score:
+                best_score = t
+                best_score_m = m[0]
+            t = avg_pruned[m[0]]                     
+            if t < best_score_pruned:
+                best_score_pruned = t
+                best_score_m_pruned = m[0]
+
+
     for a in methods:
         if "sep" in a[0]:
             optim = get(r, "ilp-sep-cbc", "untangled", "avg_score")
         else:
             optim = get(r, "ilp-cbc", "untangled", "avg_score")
 
-        ret += "%s && %s  && %s \\\\\n" % (a[1],
-                                           format_float(avg[a[0]]),
-                                           format_float(avg_pruned[a[0]])
+        ret += "%s && %s & %s  && %s & %s  \\\\\n" % (a[1],
+                                           bold_if(format_msecs(avg_t[a[0]]), ("sep" in a[0] and best_t_m_sep== a[0]) or ("sep" not in a[0] and best_t_m== a[0])),
+                                           bold_if(format_float(avg[a[0]]), ("sep" in a[0] and best_score_m_sep== a[0]) or ("sep" not in a[0] and best_score_m== a[0])),
+                                           bold_if(format_msecs(avg_t_pruned[a[0]]),  ("sep" in a[0] and best_t_m_sep_pruned== a[0]) or ("sep" not in a[0] and best_t_m_pruned== a[0])),
+                                           bold_if(format_float(avg_pruned[a[0]]), ("sep" in a[0] and best_score_m_sep_pruned== a[0]) or ("sep" not in a[0] and best_score_m_pruned== a[0])),
                                            )
 
         if a[0] == "anneal-random":
-            ret += "\\cline{2-5}\n"
+            ret += "\\cline{2-7}\n"
         first = False
 
     ret += "\\bottomrule"

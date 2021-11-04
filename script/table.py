@@ -5,6 +5,7 @@
 # Authors: Patrick Brosi (brosi@cs.uni-freiburg.de)
 
 import json
+from statistics import median
 import sys
 import os
 import math
@@ -641,7 +642,7 @@ def tbl_approx_comp_avg(results):
 def tbl_ilp_comp(results):
     ret = "\\begin{table}\n"
     ret += "  \\centering\n"
-    ret += "  \\caption[]{ILP Dimensions (given as rows$\\times$ cols) and solution times for all our ILP variants on the raw input graph and on the pruned \\& cut input graph. If a graph had multiple components, we optimized them separately, and the dimensions for the largest component are given, but solution times are always cumulative. \\label{TBL:loom:ilp-comp}}\n"
+    ret += "  \\caption[]{ILP Dimensions (given as rows$\\times$ cols) and solution times for all our ILP variants on the raw input graph and on the pruned \\& cut input graph. If a graph had multiple components, we optimized them separately, and the dimensions for the largest component are given, but solution times are always cumulative. We only measured the time to solve the ILP, not the ILP construction time or the time it took to extract the line ordering from the ILP solution (which were both negligible) or the time required to set up the solver environment. \\label{TBL:loom:ilp-comp}}\n"
     ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\footnotesize\\setlength\\tabcolsep{2pt}\n"
 
     ret += "    \\begin{tabular*}{\\textwidth}{@{\\extracolsep{\\fill}} l@{\\hskip 1.2mm} r r r r@{\\hskip 2.5mm} r r r r r@{\\hskip 1.5mm}r@{\\hskip 1mm}r r r}\n"
@@ -717,8 +718,18 @@ def tbl_untangling_graph_size(results):
     sort = sorted(
         sort, key=lambda d: results[d]["greedy-lookahead-sep"]["raw"]["input_num_edges"])
 
+    pruned_red = []
+    untangled_red = []
+
     for i, dataset_id in enumerate(sort):
         r = results[dataset_id]
+
+        rawsize = get(r, "greedy-sep", "raw", "optgraph_solution_space_size")
+        prunedsize = get(r, "greedy-sep", "pruned", "optgraph_solution_space_size")
+        untangledsize = get(r, "greedy-sep", "untangled", "optgraph_solution_space_size")
+
+        pruned_red.append((rawsize / prunedsize))
+        untangled_red.append((rawsize / untangledsize))
 
         ret += "%s && %s  & %s  & %s &  %s  &   %s  &  %s  &&  %s  &  %s  &  %s &  %s &  %s   &  %s  &&  %s &  %s &  %s &  %s &  %s &  %s\\\\\n" % (DATASET_LABELS_SHORT[dataset_id],
                                                                                                                                                     format_int(
@@ -759,6 +770,10 @@ def tbl_untangling_graph_size(results):
                            "optgraph_nontrivial_comps_searchspace_one")),
         )
 
+    ret += "\\midrule\n"
+
+    ret += "\\begin{tabular}{@{}l@{}}med\\\\[-5pt]red\\end{tabular} &&  &  & &   &    &   &&   &   &  &  %s &   &   &&  &  &  &  %s & &  \\\\\n" % (scinot(median(pruned_red)), scinot(median(untangled_red)))
+
     ret += "\\bottomrule"
     ret += "\\end{tabular*}}\n"
     ret += "\\end{table}\n"
@@ -769,7 +784,7 @@ def tbl_untangling_graph_size(results):
 def tbl_untangling_ilp(results):
     ret = "\\begin{table}\n"
     ret += "  \\centering\n"
-    ret += "  \\caption[]{Impact of full simplification on ILP sizes and solution times.\\label{TBL:loom:untangling-ilp} }\n"
+    ret += "  \\caption[]{Impact of full simplification on ILP sizes and solution times. We only measured the time to solve the ILP, not the ILP construction time or the time it took to extract the line ordering from the ILP solution (which were both negligible) or the time required to set up the solver environment.\\label{TBL:loom:untangling-ilp} }\n"
     ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\normalsize\\setlength\\tabcolsep{2pt}\n"
 
     ret += "    \\begin{tabular*}{1\\textwidth}{@{\\extracolsep{\\fill}} l r r r r r r r r r r r r r r}\n"

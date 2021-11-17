@@ -605,7 +605,14 @@
         "deg": "3", 
         "deg_in": "3", 
         "deg_out": "3", 
-        "id": "0x55c866363a70"
+        "id": "0x55c866363a70",
+        "excluded_line_conns": [
+          {
+            "edge1_node": "0x55c866726300", 
+            "edge2_node": "0x55c866911930", 
+            "route": "\"0x561971baaa70\""
+          }
+		]
       }
     }, 
     {
@@ -685,7 +692,21 @@
         "deg_out": "2", 
         "id": "0x55c86660be40", 
         "station_id": "\"200060\"", 
-        "station_label": "Central"
+        "station_label": "Central",
+        "excluded_line_conns": [
+          {
+            "edge1_node": "0x55c8673aef20", 
+            "edge2_node": "0x55c86747a280", 
+            "route": "\"0x561971c3bda0\""
+          },{
+            "edge1_node": "0x55c8673aef20", 
+            "edge2_node": "0x55c86747a280", 
+            "route": "\"0x561971baaa70\""
+          },{
+            "edge1_node": "0x55c8673aef20", 
+            "edge2_node": "0x55c86747a280", 
+            "route": "\"0x561971baa7e0\""
+          }]
       }
     }, 
     {
@@ -3179,11 +3200,6 @@
             "label": "T9"
           }, 
           {
-            "color": "6f818e", 
-            "id": "\"0x561971bab190\"", 
-            "label": "T7"
-          },
-          {
             "color": "0098cd", 
             "direction": "0x55c864485b40", 
             "id": "\"0x561971baaa70\"", 
@@ -3392,11 +3408,6 @@
             "color": "d11f2f", 
             "id": "\"0x561971c3be60\"", 
             "label": "T9"
-          }, 
-          {
-            "color": "6f818e", 
-            "id": "\"0x561971bab190\"", 
-            "label": "T7"
           }], 
         "to": "0x55c864485b40"
       }

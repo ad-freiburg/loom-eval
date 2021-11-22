@@ -471,7 +471,7 @@ def tbl_approx_comp(results):
 def tbl_approx_comp_avg(results):
     ret = "\\begin{table}\n"
     ret += "  \\centering\n"
-    ret += "  \\caption[]{Average solution time (t) and relative approximation errors (\\eta) of all our heuristic approaches, over all datasets. \\label{TBL:loom:approx-comp-avg}}\n"
+    ret += "  \\caption[]{Average solution time (t) and relative approximation errors ($\\eta$) of all our heuristic approaches, over all datasets. \\label{TBL:loom:approx-comp-avg}}\n"
     ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\normalsize\\setlength\\tabcolsep{5pt}\n"
 
     ret += "    \\begin{tabular*}{0.8\\textwidth}{@{\\extracolsep{\\fill}} l@{\\hskip 2mm} r r r r r r}\n"

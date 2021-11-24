@@ -137,6 +137,9 @@ EVAL_ANNEAL_RANDOM_SEP_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/anneal-random
 
 tables: $(TABLES_DIR)/tbl-approx-comp-avg.pdf $(TABLES_DIR)/tbl-untangling-approx.pdf $(TABLES_DIR)/tbl-untangling-ilp.pdf $(TABLES_DIR)/tbl-untangling-graph-size.pdf $(TABLES_DIR)/tbl-ilp-comp.pdf $(TABLES_DIR)/tbl-approx-comp.pdf $(TABLES_DIR)/tbl-main-res-approx-error.pdf $(TABLES_DIR)/tbl-main-res-time.pdf $(TABLES_DIR)/tbl-dataset-overview.pdf
 
+list:
+	@echo $(DATASETS) | tr ' ' '\n'
+
 #### BASELINE ILP
 
 ### on raw graph

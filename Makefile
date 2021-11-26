@@ -9,10 +9,12 @@ TABLES_DIR := tables
 
 OVERALL_TIMEOUT := 21600 # = 6 hours, timeout after which we abort and do not write a solution, in seconds
 
-ILP_TIMEOUT := $(OVERALL_TIMEOUT)
+ILP_TIMEOUT := 43200
 ILP_CACHE_DIR := /tmp
 
 GLOB_ARGS = --ilp-time-limit=$(ILP_TIMEOUT) --output-stats=1 --in-station-crossing-penalty-factor-same-seg=12 --in-station-crossing-penalty-factor-diff-seg=3 --diff-seg-cross-penalty-factor=1 --same-seg-cross-penalty-factor=4
+
+GLOB_ARGS_NONOPT = --ilp-time-limit=1 --output-stats=1 --in-station-crossing-penalty-factor-same-seg=12 --in-station-crossing-penalty-factor-diff-seg=3 --diff-seg-cross-penalty-factor=1 --same-seg-cross-penalty-factor=4
 
 GLOB_ARGS_NOSEP = --separation-penalty-factor=0 --in-station-separation-penalty-factor=0
 
@@ -32,6 +34,20 @@ EVAL_EXH_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/exhaustive/pruned/res.json, $(
 EVAL_EXH_SEP_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/exhaustive-sep/pruned/res.json, $(DATASETS))
 EVAL_EXH_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/exhaustive/untangled/res.json, $(DATASETS))
 EVAL_EXH_SEP_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/exhaustive-sep/untangled/res.json, $(DATASETS))
+
+EVAL_ILP_NONOPT_BASELINE := $(patsubst %, $(RESULTS_DIR)/%/ilp-baseline-nonopt/raw/res.json, $(DATASETS))
+EVAL_ILP_NONOPT_BASELINE_SEP := $(patsubst %, $(RESULTS_DIR)/%/ilp-baseline-sep-nonopt/raw/res.json, $(DATASETS))
+EVAL_ILP_NONOPT_BASELINE_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/ilp-baseline-nonopt/pruned/res.json, $(DATASETS))
+EVAL_ILP_NONOPT_BASELINE_SEP_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/ilp-baseline-sep-nonopt/pruned/res.json, $(DATASETS))
+EVAL_ILP_NONOPT_BASELINE_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/ilp-baseline-nonopt/untangled/res.json, $(DATASETS))
+EVAL_ILP_NONOPT_BASELINE_SEP_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/ilp-baseline-sep-nonopt/untangled/res.json, $(DATASETS))
+
+EVAL_ILP_NONOPT := $(patsubst %, $(RESULTS_DIR)/%/ilp-nonopt/raw/res.json, $(DATASETS))
+EVAL_ILP_NONOPT_SEP := $(patsubst %, $(RESULTS_DIR)/%/ilp-sep-nonopt/raw/res.json, $(DATASETS))
+EVAL_ILP_NONOPT_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/ilp-nonopt/pruned/res.json, $(DATASETS))
+EVAL_ILP_NONOPT_SEP_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/ilp-sep-nonopt/pruned/res.json, $(DATASETS))
+EVAL_ILP_NONOPT_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/ilp-nonopt/untangled/res.json, $(DATASETS))
+EVAL_ILP_NONOPT_SEP_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/ilp-sep-nonopt/untangled/res.json, $(DATASETS))
 
 EVAL_ILP_GLPK_BASELINE := $(patsubst %, $(RESULTS_DIR)/%/ilp-baseline-glpk/raw/res.json, $(DATASETS))
 EVAL_ILP_GLPK_BASELINE_SEP := $(patsubst %, $(RESULTS_DIR)/%/ilp-baseline-sep-glpk/raw/res.json, $(DATASETS))
@@ -75,19 +91,19 @@ EVAL_ILP_GUROBI_SEP_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/ilp-sep-gurobi/prun
 EVAL_ILP_GUROBI_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/ilp-gurobi/untangled/res.json, $(DATASETS))
 EVAL_ILP_GUROBI_SEP_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/ilp-sep-gurobi/untangled/res.json, $(DATASETS))
 
-EVAL_ILP_BASELINE := $(EVAL_ILP_GLPK_BASELINE) $(EVAL_ILP_CBC_BASELINE)
-EVAL_ILP_BASELINE_SEP := $(EVAL_ILP_GLPK_BASELINE_SEP) $(EVAL_ILP_CBC_BASELINE_SEP)
-EVAL_ILP_BASELINE_PRUNED := $(EVAL_ILP_GLPK_BASELINE_PRUNED)  $(EVAL_ILP_CBC_BASELINE_PRUNED)
-EVAL_ILP_BASELINE_SEP_PRUNED := $(EVAL_ILP_GLPK_BASELINE_SEP_PRUNED) $(EVAL_ILP_CBC_BASELINE_SEP_PRUNED)
-EVAL_ILP_BASELINE_UNTANGLED := $(EVAL_ILP_GLPK_BASELINE_UNTANGLED) $(EVAL_ILP_CBC_BASELINE_UNTANGLED)
-EVAL_ILP_BASELINE_SEP_UNTANGLED := $(EVAL_ILP_GLPK_BASELINE_SEP_UNTANGLED) $(EVAL_ILP_CBC_BASELINE_SEP_UNTANGLED)
+EVAL_ILP_BASELINE := $(EVAL_ILP_GLPK_BASELINE) $(EVAL_ILP_CBC_BASELINE) $(EVAL_ILP_GUROBI_BASELINE) $(EVAL_ILP_NONOPT_BASELINE)
+EVAL_ILP_BASELINE_SEP := $(EVAL_ILP_GLPK_BASELINE_SEP) $(EVAL_ILP_CBC_BASELINE_SEP) $(EVAL_ILP_GUROBI_BASELINE_SEP) $(EVAL_ILP_NONOPT_BASELINE_SEP)
+EVAL_ILP_BASELINE_PRUNED := $(EVAL_ILP_GLPK_BASELINE_PRUNED)  $(EVAL_ILP_CBC_BASELINE_PRUNED) $(EVAL_ILP_GUROBI_BASELINE_PRUNED) $(EVAL_ILP_NONOPT_BASELINE_PRUNED)
+EVAL_ILP_BASELINE_SEP_PRUNED := $(EVAL_ILP_GLPK_BASELINE_SEP_PRUNED) $(EVAL_ILP_CBC_BASELINE_SEP_PRUNED) $(EVAL_ILP_GUROBI_BASELINE_SEP_PRUNED) $(EVAL_ILP_NONOPT_BASELINE_SEP_PRUNED)
+EVAL_ILP_BASELINE_UNTANGLED := $(EVAL_ILP_GLPK_BASELINE_UNTANGLED) $(EVAL_ILP_CBC_BASELINE_UNTANGLED) $(EVAL_ILP_GUROBI_BASELINE_UNTANGLED) $(EVAL_ILP_NONOPT_BASELINE_UNTANGLED)
+EVAL_ILP_BASELINE_SEP_UNTANGLED := $(EVAL_ILP_GLPK_BASELINE_SEP_UNTANGLED) $(EVAL_ILP_CBC_BASELINE_SEP_UNTANGLED) $(EVAL_ILP_GUROBI_BASELINE_SEP_UNTANGLED) $(EVAL_ILP_NONOPT_BASELINE_SEP_UNTANGLED)
 
-EVAL_ILP := $(EVAL_ILP_GLPK) $(EVAL_ILP_CBC) $(EVAL_ILP_GUROBI)
-EVAL_ILP_SEP := $(EVAL_ILP_GLPK_SEP) $(EVAL_ILP_CBC_SEP) $(EVAL_ILP_GUROBI_SEP)
-EVAL_ILP_PRUNED := $(EVAL_ILP_GLPK_PRUNED) $(EVAL_ILP_CBC_PRUNED) $(EVAL_ILP_GUROBI_PRUNED)
-EVAL_ILP_SEP_PRUNED := $(EVAL_ILP_GLPK_SEP_PRUNED) $(EVAL_ILP_CBC_SEP_PRUNED) $(EVAL_ILP_GUROBI_SEP_PRUNED)
-EVAL_ILP_UNTANGLED := $(EVAL_ILP_GLPK_UNTANGLED) $(EVAL_ILP_CBC_UNTANGLED) $(EVAL_ILP_GUROBI_UNTANGLED)
-EVAL_ILP_SEP_UNTANGLED := $(EVAL_ILP_GLPK_SEP_UNTANGLED) $(EVAL_ILP_CBC_SEP_UNTANGLED) $(EVAL_ILP_GUROBI_SEP_UNTANGLED)
+EVAL_ILP := $(EVAL_ILP_GLPK) $(EVAL_ILP_CBC) $(EVAL_ILP_GUROBI) $(EVAL_ILP_NONOPT)
+EVAL_ILP_SEP := $(EVAL_ILP_GLPK_SEP) $(EVAL_ILP_CBC_SEP) $(EVAL_ILP_GUROBI_SEP) $(EVAL_ILP_NONOPT_SEP)
+EVAL_ILP_PRUNED := $(EVAL_ILP_GLPK_PRUNED) $(EVAL_ILP_CBC_PRUNED) $(EVAL_ILP_GUROBI_PRUNED) $(EVAL_ILP_NONOPT_PRUNED)
+EVAL_ILP_SEP_PRUNED := $(EVAL_ILP_GLPK_SEP_PRUNED) $(EVAL_ILP_CBC_SEP_PRUNED) $(EVAL_ILP_GUROBI_SEP_PRUNED) $(EVAL_ILP_NONOPT_SEP_PRUNED)
+EVAL_ILP_UNTANGLED := $(EVAL_ILP_GLPK_UNTANGLED) $(EVAL_ILP_CBC_UNTANGLED) $(EVAL_ILP_GUROBI_UNTANGLED) $(EVAL_ILP_NONOPT_UNTANGLED)
+EVAL_ILP_SEP_UNTANGLED := $(EVAL_ILP_GLPK_SEP_UNTANGLED) $(EVAL_ILP_CBC_SEP_UNTANGLED) $(EVAL_ILP_GUROBI_SEP_UNTANGLED) $(EVAL_ILP_NONOPT_SEP_UNTANGLED)
 
 EVAL_GREEDY := $(patsubst %, $(RESULTS_DIR)/%/greedy/raw/res.json, $(DATASETS))
 EVAL_GREEDY_SEP := $(patsubst %, $(RESULTS_DIR)/%/greedy-sep/raw/res.json, $(DATASETS))
@@ -139,6 +155,55 @@ tables: $(TABLES_DIR)/tbl-approx-comp-avg.pdf $(TABLES_DIR)/tbl-untangling-appro
 
 list:
 	@echo $(DATASETS) | tr ' ' '\n'
+
+#### BASELINE ILP
+
+### on raw graph
+$(RESULTS_DIR)/%/ilp-baseline-nonopt/raw/res.json: datasets/%.json
+	@printf "[%s] Calculating results for baseline ILP using NONOPT w/o separation penality on raw graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@(timeout $(OVERALL_TIMEOUT) $(LOOM) $(GLOB_ARGS_NONOPT) $(GLOB_ARGS_RAW) $(GLOB_ARGS_NOSEP) --ilp-solver=glpk! --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log) || (echo "[]" > $@ && printf "[%s] An error or timeout occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+$(RESULTS_DIR)/%/ilp-baseline-sep-nonopt/raw/res.json: datasets/%.json
+	@printf "[%s] Calculating results for baseline ILP using NONOPT with separation penality on raw graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@(timeout $(OVERALL_TIMEOUT) $(LOOM) $(GLOB_ARGS_NONOPT) $(GLOB_ARGS_RAW) $(GLOB_ARGS_SEP) --ilp-solver=glpk! --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log) || (echo "[]" > $@ && printf "[%s] An error or timeout occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+### on pruned graph
+$(RESULTS_DIR)/%/ilp-baseline-nonopt/pruned/res.json: datasets/%.json
+	@printf "[%s] Calculating results for baseline ILP using NONOPT w/o separation penality on pruned graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@(timeout $(OVERALL_TIMEOUT) $(LOOM) $(GLOB_ARGS_PRUNED) $(GLOB_ARGS_NONOPT) $(GLOB_ARGS_NOSEP) --ilp-solver=glpk! --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log) || (echo "[]" > $@ && printf "[%s] An error or timeout occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+
+$(RESULTS_DIR)/%/ilp-baseline-sep-nonopt/pruned/res.json: datasets/%.json
+	@printf "[%s] Calculating results for baseline ILP using NONOPT with separation penality on pruned graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@(timeout $(OVERALL_TIMEOUT) $(LOOM) $(GLOB_ARGS_PRUNED) $(GLOB_ARGS_NONOPT) $(GLOB_ARGS_SEP) --ilp-solver=glpk! --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log) || (echo "[]" > $@ && printf "[%s] An error or timeout occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+### on untangled graph
+$(RESULTS_DIR)/%/ilp-baseline-nonopt/untangled/res.json: datasets/%.json
+	@printf "[%s] Calculating results for baseline ILP using NONOPT w/o separation penality on untangled graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@(timeout $(OVERALL_TIMEOUT) $(LOOM) $(GLOB_ARGS_UNTANGLED)  $(GLOB_ARGS_NONOPT) $(GLOB_ARGS_NOSEP) --ilp-solver=glpk! --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log) || (echo "[]" > $@ && printf "[%s] An error or timeout occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+
+$(RESULTS_DIR)/%/ilp-baseline-sep-nonopt/untangled/res.json: datasets/%.json
+	@printf "[%s] Calculating results for baseline ILP using NONOPT with separation penality on untangled graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@(timeout $(OVERALL_TIMEOUT) $(LOOM) $(GLOB_ARGS_UNTANGLED) $(GLOB_ARGS_NONOPT) $(GLOB_ARGS_SEP) --ilp-solver=glpk! --optim-method=ilp-naive < $< > $@ 2> $(basename $@).log) || (echo "[]" > $@ && printf "[%s] An error or timeout occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
 
 #### BASELINE ILP
 
@@ -291,6 +356,55 @@ $(RESULTS_DIR)/%/ilp-baseline-sep-gurobi/untangled/res.json: datasets/%.json
 
 
 #### IMPROVED ILP
+
+### on raw graph
+$(RESULTS_DIR)/%/ilp-nonopt/raw/res.json: datasets/%.json
+	@printf "[%s] Calculating results for impr. ILP using NONOPT w/o separation penality on raw graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@(timeout $(OVERALL_TIMEOUT) $(LOOM) $(GLOB_ARGS_NONOPT) $(GLOB_ARGS_RAW) $(GLOB_ARGS_NOSEP) --ilp-solver=glpk! --optim-method=ilp < $< > $@ 2> $(basename $@).log) || (echo "[]" > $@ && printf "[%s] An error or timeout occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+$(RESULTS_DIR)/%/ilp-sep-nonopt/raw/res.json: datasets/%.json
+	@printf "[%s] Calculating results for impr. ILP using NONOPT with separation penality on raw graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@(timeout $(OVERALL_TIMEOUT) $(LOOM) $(GLOB_ARGS_NONOPT) $(GLOB_ARGS_RAW) $(GLOB_ARGS_SEP) --ilp-solver=glpk! --optim-method=ilp < $< > $@ 2> $(basename $@).log) || (echo "[]" > $@ && printf "[%s] An error or timeout occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+### on pruned graph
+$(RESULTS_DIR)/%/ilp-nonopt/pruned/res.json: datasets/%.json
+	@printf "[%s] Calculating results for impr. ILP using NONOPT w/o separation penality on pruned graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@(timeout $(OVERALL_TIMEOUT) $(LOOM) $(GLOB_ARGS_PRUNED) $(GLOB_ARGS_NONOPT) $(GLOB_ARGS_NOSEP) --ilp-solver=glpk! --optim-method=ilp < $< > $@ 2> $(basename $@).log) || (echo "[]" > $@ && printf "[%s] An error or timeout occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+
+$(RESULTS_DIR)/%/ilp-sep-nonopt/pruned/res.json: datasets/%.json
+	@printf "[%s] Calculating results for impr. ILP using NONOPT with separation penality on pruned graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@(timeout $(OVERALL_TIMEOUT) $(LOOM) $(GLOB_ARGS_PRUNED) $(GLOB_ARGS_NONOPT) $(GLOB_ARGS_SEP) --ilp-solver=glpk! --optim-method=ilp < $< > $@ 2> $(basename $@).log) || (echo "[]" > $@ && printf "[%s] An error or timeout occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+### on untangled graph
+$(RESULTS_DIR)/%/ilp-nonopt/untangled/res.json: datasets/%.json
+	@printf "[%s] Calculating results for impr. ILP using NONOPT w/o separation penality on untangled graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@(timeout $(OVERALL_TIMEOUT) $(LOOM) $(GLOB_ARGS_UNTANGLED)  $(GLOB_ARGS_NONOPT) $(GLOB_ARGS_NOSEP) --ilp-solver=glpk! --optim-method=ilp < $< > $@ 2> $(basename $@).log) || (echo "[]" > $@ && printf "[%s] An error or timeout occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+
+$(RESULTS_DIR)/%/ilp-sep-nonopt/untangled/res.json: datasets/%.json
+	@printf "[%s] Calculating results for impr. ILP using NONOPT with separation penality on untangled graph for $< ... \n" "$$(date -Is)"
+	@mkdir -p $(dir $@) # create directory
+	@(timeout $(OVERALL_TIMEOUT) $(LOOM) $(GLOB_ARGS_UNTANGLED) $(GLOB_ARGS_NONOPT) $(GLOB_ARGS_SEP) --ilp-solver=glpk! --optim-method=ilp < $< > $@ 2> $(basename $@).log) || (echo "[]" > $@ && printf "[%s] An error or timeout occured, see the log for details.\n" "$$(date -Is)")
+
+	@printf "[%s] Done.\n" "$$(date -Is)"
+
+#####
 
 ### on raw graph
 $(RESULTS_DIR)/%/ilp-glpk/raw/res.json: datasets/%.json
@@ -829,7 +943,7 @@ $(TABLES_DIR)/tbl-dataset-overview.pdf: $(TABLES_DIR)/tbl-dataset-overview.tex
 	@pdflatex -output-directory=$(TABLES_DIR) -jobname=tbl-dataset-overview $(TABLES_DIR)/tmp > /dev/null
 	@rm $(TABLES_DIR)/tmp
 
-$(TABLES_DIR)/tbl-main-res-time.tex: script/table.py script/template.tex $(EVAL_GREEDY_LOOKAHEAD_SEP) $(EVAL_HILLC_RANDOM_SEP) $(EVAL_ANNEAL_RANDOM_SEP)
+$(TABLES_DIR)/tbl-main-res-time.tex: script/table.py script/template.tex $(EVAL_GREEDY_LOOKAHEAD_SEP) $(EVAL_HILLC_RANDOM_SEP) $(EVAL_ANNEAL_RANDOM_SEP) $(EVAL_ILP_GUROBI_BASELINE_SEP $(EVAL_ILP_GUROBI_BASELINE_SEP_UNTANGLED) $(EVAL_ILP_GUROBI_SEP_UNTANGLED)  $(EVAL_ILP_GUROBI_SEP_PRUNED)  $(EVAL_ILP_GUROBI_SEP)
 	@mkdir -p $(TABLES_DIR)
 	@python3 script/table.py main-res-time $(patsubst %, $(RESULTS_DIR)/%, $(DATASETS)) > $@
 

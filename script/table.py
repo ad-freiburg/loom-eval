@@ -209,9 +209,9 @@ def tbl_main_res_time(results):
                                                                                                                "untangled", "avg_solve_time")),
                                                                                               format_msecs(get(r, "anneal-random-sep",
                                                                                                                "untangled", "avg_solve_time")),
-                                                                                              format_msecs(get(r, "ilp-gurobi-baseline",
+                                                                                              format_msecs(get(r, "ilp-baseline-sep-gurobi",
                                                                                                                "raw", "avg_solve_time")),
-                                                                                              format_msecs(get(r, "ilp-gurobi-baseline",
+                                                                                              format_msecs(get(r, "ilp-baseline-sep-gurobi",
                                                                                                                "untangled", "avg_solve_time")),
                                                                                               format_msecs(
                                                                                                   get(r, "ilp-gurobi", "raw", "avg_solve_time")),
@@ -642,7 +642,7 @@ def tbl_approx_comp_avg(results):
 def tbl_ilp_comp(results):
     ret = "\\begin{table}\n"
     ret += "  \\centering\n"
-    ret += "  \\caption[]{ILP Dimensions (given as rows$\\times$ cols) and solution times for all our ILP variants on the raw input graph and on the pruned \\& cut input graph. If a graph had multiple components, we optimized them separately, and the dimensions for the largest component are given, but solution times are always cumulative. We only measured the time to solve the ILP, not the ILP construction time or the time it took to extract the line ordering from the ILP solution (which were both negligible) or the time required to set up the solver environment. \\label{TBL:loom:ilp-comp}}\n"
+    ret += "  \\caption[]{ILP Dimensions (given as rows $\\times$ cols) and solution times for all our ILP variants on the raw input graph and on the pruned \\& cut input graph. If a graph had multiple components, we optimized them separately, and the dimensions for the largest component are given, but solution times are always cumulative. We only measured the time to solve the ILP, not the ILP construction time or the time it took to extract the line ordering from the ILP solution (which were both negligible) or the time required to set up the solver environment. \\label{TBL:loom:ilp-comp}}\n"
     ret += "    {\\renewcommand{\\baselinestretch}{1.13}\\footnotesize\\setlength\\tabcolsep{2pt}\n"
 
     ret += "    \\begin{tabular*}{\\textwidth}{@{\\extracolsep{\\fill}} l@{\\hskip 1.2mm} r r r r@{\\hskip 2.5mm} r r r r r@{\\hskip 1.5mm}r@{\\hskip 1mm}r r r}\n"
@@ -665,9 +665,9 @@ def tbl_ilp_comp(results):
                   ("ilp", "\\iILP"), ("ilp-sep", "\\iILPst")]:
             ret += "%s  & {%s}   & \\Hdim{%s}{%s}  &  %s & %s & %s & &  \\Hdim{%s}{%s} & %s & %s & %s &  %s & %s \\\\\n" % (DATASET_LABELS_SHORT[dataset_id] if first else "",
                                                                                                                             a[1],
-                                                                                                                            format_int(get(r, a[0] + "-cbc", "raw",
+                                                                                                                            format_int(get(r, a[0] + "-nonopt", "raw",
                                                                                                                                            "max_num_rows_in_comp")),
-                                                                                                                            format_int(get(r, a[0] + "-cbc", "raw",
+                                                                                                                            format_int(get(r, a[0] + "-nonopt", "raw",
                                                                                                                                            "max_num_cols_in_comp")),
                                                                                                                             format_msecs(
                                                                                                                                 get(r, a[0] + "-glpk", "raw", "avg_solve_time")),
@@ -675,9 +675,9 @@ def tbl_ilp_comp(results):
                                                                                                                                 get(r, a[0] + "-cbc", "raw", "avg_solve_time")),
                                                                                                                             format_msecs(
                                                                                                                                 get(r, a[0] + "-gurobi", "raw", "avg_solve_time")),
-                                                                                                                            format_int(get(r, a[0] + "-cbc", "pruned",
+                                                                                                                            format_int(get(r, a[0] + "-nonopt", "pruned",
                                                                                                                                            "max_num_rows_in_comp")),
-                                                                                                                            format_int(get(r, a[0] + "-cbc", "pruned",
+                                                                                                                            format_int(get(r, a[0] + "-nonopt", "pruned",
                                                                                                                                            "max_num_cols_in_comp")),
                                                                                                                             format_msecs(
                 get(r, a[0] + "-glpk", "pruned", "avg_solve_time")),
@@ -685,9 +685,9 @@ def tbl_ilp_comp(results):
                 format_msecs(
                     get(r, a[0] + "-gurobi", "pruned", "avg_solve_time")),
                 format_int(
-                    get(r, a[0] + "-cbc", "pruned", "avg_num_crossings")),
+                    get(r, a[0] + "-gurobi", "pruned", "avg_num_crossings")),
                 format_int(
-                    get(r, a[0] + "-cbc", "pruned", "avg_num_separations"))
+                    get(r, a[0] + "-gurobi", "pruned", "avg_num_separations"))
             )
             first = False
         if i < len(sort) - 1:
@@ -806,9 +806,9 @@ def tbl_untangling_ilp(results):
         for a in [("ilp", "\\iILP"), ("ilp-sep", "\\iILPst")]:
             ret += "%s  & {%s}   & \\Hdim{%s}{%s}       &  %s &  %s & %s & & \\Hdim{%s}{%s} & %s & %s & %s \\\\\n" % (DATASET_LABELS_SHORT[dataset_id] if first else "",
                                                                                                                       a[1],
-                                                                                                                      format_int(get(r, a[0] + "-cbc", "pruned",
+                                                                                                                      format_int(get(r, a[0] + "-nonopt", "pruned",
                                                                                                                                      "max_num_rows_in_comp")),
-                                                                                                                      format_int(get(r, a[0] + "-cbc", "pruned",
+                                                                                                                      format_int(get(r, a[0] + "-nonopt", "pruned",
                                                                                                                                      "max_num_cols_in_comp")),
                                                                                                                       format_msecs(
                 get(r, a[0] + "-glpk", "pruned", "avg_solve_time")),
@@ -816,9 +816,9 @@ def tbl_untangling_ilp(results):
                 format_msecs(
                     get(r, a[0] + "-gurobi", "pruned", "avg_solve_time")),
                 format_int(
-                    get(r, a[0] + "-cbc", "untangled", "max_num_rows_in_comp")),
+                    get(r, a[0] + "-nonopt", "untangled", "max_num_rows_in_comp")),
                 format_int(
-                    get(r, a[0] + "-cbc", "untangled", "max_num_cols_in_comp")),
+                    get(r, a[0] + "-nonopt", "untangled", "max_num_cols_in_comp")),
                 format_msecs(
                     get(r, a[0] + "-glpk", "untangled", "avg_solve_time")),
                 format_msecs(

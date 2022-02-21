@@ -214,11 +214,11 @@ def tbl_main_res_time(results):
                                                                                               format_msecs(get(r, "ilp-baseline-sep-gurobi",
                                                                                                                "untangled", "avg_solve_time")),
                                                                                               format_msecs(
-                                                                                                  get(r, "ilp-gurobi", "raw", "avg_solve_time")),
+                                                                                                  get(r, "ilp-sep-gurobi", "raw", "avg_solve_time")),
                                                                                               format_msecs(
-                                                                                                  get(r, "ilp-gurobi", "pruned", "avg_solve_time")),
+                                                                                                  get(r, "ilp-sep-gurobi", "pruned", "avg_solve_time")),
                                                                                               format_msecs(
-                                                                                                  get(r, "ilp-gurobi", "untangled", "avg_solve_time"))
+                                                                                                  get(r, "ilp-sep-gurobi", "untangled", "avg_solve_time"))
                                                                                               )
 
     ret += "\\bottomrule"

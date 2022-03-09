@@ -943,7 +943,7 @@ $(TABLES_DIR)/tbl-dataset-overview.pdf: $(TABLES_DIR)/tbl-dataset-overview.tex
 	@pdflatex -output-directory=$(TABLES_DIR) -jobname=tbl-dataset-overview $(TABLES_DIR)/tmp > /dev/null
 	@rm $(TABLES_DIR)/tmp
 
-$(TABLES_DIR)/tbl-main-res-time.tex: script/table.py script/template.tex $(EVAL_GREEDY_LOOKAHEAD_SEP) $(EVAL_HILLC_RANDOM_SEP) $(EVAL_ANNEAL_RANDOM_SEP) $(EVAL_ILP_GUROBI_BASELINE_SEP $(EVAL_ILP_GUROBI_BASELINE_SEP_UNTANGLED) $(EVAL_ILP_GUROBI_SEP_UNTANGLED)  $(EVAL_ILP_GUROBI_SEP_PRUNED)  $(EVAL_ILP_GUROBI_SEP)
+$(TABLES_DIR)/tbl-main-res-time.tex: script/table.py script/template.tex $(EVAL_GREEDY_LOOKAHEAD_SEP) $(EVAL_HILLC_RANDOM_SEP) $(EVAL_ANNEAL_RANDOM_SEP) $(EVAL_ILP_GUROBI_BASELINE_SEP) $(EVAL_ILP_GUROBI_BASELINE_SEP_UNTANGLED) $(EVAL_ILP_GUROBI_SEP_UNTANGLED)  $(EVAL_ILP_GUROBI_SEP_PRUNED)  $(EVAL_ILP_GUROBI_SEP)
 	@mkdir -p $(TABLES_DIR)
 	@python3 script/table.py main-res-time $(patsubst %, $(RESULTS_DIR)/%, $(DATASETS)) > $@
 

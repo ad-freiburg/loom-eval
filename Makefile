@@ -12,19 +12,19 @@ OVERALL_TIMEOUT := 21600 # = 6 hours, timeout after which we abort and do not wr
 ILP_TIMEOUT := 43200
 ILP_CACHE_DIR := /tmp
 
-GLOB_ARGS = --ilp-time-limit=$(ILP_TIMEOUT) --output-stats=1 --in-station-crossing-penalty-factor-same-seg=12 --in-station-crossing-penalty-factor-diff-seg=3 --diff-seg-cross-penalty-factor=1 --same-seg-cross-penalty-factor=4
+GLOB_ARGS = --ilp-time-limit=$(ILP_TIMEOUT) --output-stats --in-stat-cross-pen-same-seg=12 --in-stat-cross-pen-diff-seg=3 --diff-seg-cross-pen=1 --same-seg-cross-pen=4
 
-GLOB_ARGS_NONOPT = --ilp-time-limit=1 --output-stats=1 --in-station-crossing-penalty-factor-same-seg=12 --in-station-crossing-penalty-factor-diff-seg=3 --diff-seg-cross-penalty-factor=1 --same-seg-cross-penalty-factor=4
+GLOB_ARGS_NONOPT = --ilp-time-limit=1 --output-stats --in-stat-cross-pen-same-seg=12 --in-stat-cross-pen-diff-seg=3 --diff-seg-cross-pen=1 --same-seg-cross-pen=4
 
-GLOB_ARGS_NOSEP = --separation-penalty-factor=0 --in-station-separation-penalty-factor=0
+GLOB_ARGS_NOSEP = --sep-pen=0 --in-statsep-pen=0
 
-GLOB_ARGS_SEP = --separation-penalty-factor=3 --in-station-separation-penalty-factor=9
+GLOB_ARGS_SEP = --sep-pen=3 --in-stat-sep-pen=9
 
-GLOB_ARGS_RAW = --prune=0 --untangle=0
+GLOB_ARGS_RAW = --no-prune --no-untangle
 
-GLOB_ARGS_PRUNED = --prune=1 --untangle=0
+GLOB_ARGS_PRUNED = --no-untangle
 
-GLOB_ARGS_UNTANGLED = --prune=0 --untangle=1
+GLOB_ARGS_UNTANGLED = --no-prune
 
 DATASETS := $(basename $(notdir $(wildcard datasets/*.json)))
 

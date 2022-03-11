@@ -6,7 +6,11 @@
     left: 0;
 }
 
-.no-labels .station-label, .no-labels .line-label  {
+.no-labels .station-label {
+  display:  none;
+}
+
+.no-labels .line-label  {
   display:  none;
 }
 
@@ -34,7 +38,6 @@
 
 svg {
   cursor: grab !important;
-  opacity:  0.95;
 }
 
 html, body {

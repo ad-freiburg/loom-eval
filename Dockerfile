@@ -40,7 +40,7 @@ RUN git clone --recurse-submodules https://github.com/ad-freiburg/loom /loom
 
 ENV GRB_LICENSE_FILE /output/gurobi.lic
 
-RUN cd /loom && rm -rf build && mkdir build && cd build && cmake .. && make -j20 loom
+RUN cd /loom && rm -rf build && mkdir build && cd build && cmake .. && make -j20 loom && make -j20 transitmap
 
 RUN mkdir -p /output
 

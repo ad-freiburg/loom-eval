@@ -16,6 +16,8 @@ RUN apt-get update \
        wget \
        make \
        cmake \
+	   python3 \
+       inkscape \
 	   texlive-base \
 	   texlive-science \
 	   texlive-latex-extra \
@@ -48,5 +50,7 @@ ADD script /script
 ADD datasets /datasets
 
 WORKDIR /
+
+RUN make help
 
 ENTRYPOINT ["make", "RESULTS_DIR=/output/results", "TABLES_DIR=/output/tables", "ILP_CACHE_DIR=/tmp"]

@@ -3,6 +3,7 @@
 # Authors: Patrick Brosi (brosi@cs.uni-freiburg.de)
 
 LOOM := loom
+TRANSITMAP := transitmap
 
 RESULTS_DIR := results
 TABLES_DIR := tables
@@ -16,7 +17,7 @@ GLOB_ARGS = --ilp-time-limit=$(ILP_TIMEOUT) --output-stats --in-stat-cross-pen-s
 
 GLOB_ARGS_NONOPT = --ilp-time-limit=1 --output-stats --in-stat-cross-pen-same-seg=12 --in-stat-cross-pen-diff-seg=3 --diff-seg-cross-pen=1 --same-seg-cross-pen=4
 
-GLOB_ARGS_NOSEP = --sep-pen=0 --in-statsep-pen=0
+GLOB_ARGS_NOSEP = --sep-pen=0 --in-stat-sep-pen=0
 
 GLOB_ARGS_SEP = --sep-pen=3 --in-stat-sep-pen=9
 
@@ -77,6 +78,13 @@ EVAL_ILP_CBC_SEP_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/ilp-sep-cbc/pruned/res
 EVAL_ILP_CBC_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/ilp-cbc/untangled/res.json, $(DATASETS))
 EVAL_ILP_CBC_SEP_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/ilp-sep-cbc/untangled/res.json, $(DATASETS))
 
+RNDR_ILP_CBC := $(patsubst %, $(RESULTS_DIR)/%/ilp-cbc/raw/render, $(DATASETS))
+RNDR_ILP_CBC_SEP := $(patsubst %, $(RESULTS_DIR)/%/ilp-sep-cbc/raw/render, $(DATASETS))
+RNDR_ILP_CBC_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/ilp-cbc/pruned/render, $(DATASETS))
+RNDR_ILP_CBC_SEP_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/ilp-sep-cbc/pruned/render, $(DATASETS))
+RNDR_ILP_CBC_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/ilp-cbc/untangled/render, $(DATASETS))
+RNDR_ILP_CBC_SEP_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/ilp-sep-cbc/untangled/render, $(DATASETS))
+
 EVAL_ILP_GUROBI_BASELINE := $(patsubst %, $(RESULTS_DIR)/%/ilp-baseline-gurobi/raw/res.json, $(DATASETS))
 EVAL_ILP_GUROBI_BASELINE_SEP := $(patsubst %, $(RESULTS_DIR)/%/ilp-baseline-sep-gurobi/raw/res.json, $(DATASETS))
 EVAL_ILP_GUROBI_BASELINE_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/ilp-baseline-gurobi/pruned/res.json, $(DATASETS))
@@ -112,12 +120,26 @@ EVAL_GREEDY_SEP_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/greedy-sep/pruned/res.j
 EVAL_GREEDY_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/greedy/untangled/res.json, $(DATASETS))
 EVAL_GREEDY_SEP_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/greedy-sep/untangled/res.json, $(DATASETS))
 
+RNDR_GREEDY := $(patsubst %, $(RESULTS_DIR)/%/greedy/raw/render, $(DATASETS))
+RNDR_GREEDY_SEP := $(patsubst %, $(RESULTS_DIR)/%/greedy-sep/raw/render, $(DATASETS))
+RNDR_GREEDY_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/greedy/pruned/render, $(DATASETS))
+RNDR_GREEDY_SEP_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/greedy-sep/pruned/render, $(DATASETS))
+RNDR_GREEDY_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/greedy/untangled/render, $(DATASETS))
+RNDR_GREEDY_SEP_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/greedy-sep/untangled/render, $(DATASETS))
+
 EVAL_GREEDY_LOOKAHEAD := $(patsubst %, $(RESULTS_DIR)/%/greedy-lookahead/raw/res.json, $(DATASETS))
 EVAL_GREEDY_LOOKAHEAD_SEP := $(patsubst %, $(RESULTS_DIR)/%/greedy-lookahead-sep/raw/res.json, $(DATASETS))
 EVAL_GREEDY_LOOKAHEAD_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/greedy-lookahead/pruned/res.json, $(DATASETS))
 EVAL_GREEDY_LOOKAHEAD_SEP_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/greedy-lookahead-sep/pruned/res.json, $(DATASETS))
 EVAL_GREEDY_LOOKAHEAD_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/greedy-lookahead/untangled/res.json, $(DATASETS))
 EVAL_GREEDY_LOOKAHEAD_SEP_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/greedy-lookahead-sep/untangled/res.json, $(DATASETS))
+
+RNDR_GREEDY_LOOKAHEAD := $(patsubst %, $(RESULTS_DIR)/%/greedy-lookahead/raw/render, $(DATASETS))
+RNDR_GREEDY_LOOKAHEAD_SEP := $(patsubst %, $(RESULTS_DIR)/%/greedy-lookahead-sep/raw/render, $(DATASETS))
+RNDR_GREEDY_LOOKAHEAD_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/greedy-lookahead/pruned/render, $(DATASETS))
+RNDR_GREEDY_LOOKAHEAD_SEP_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/greedy-lookahead-sep/pruned/render, $(DATASETS))
+RNDR_GREEDY_LOOKAHEAD_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/greedy-lookahead/untangled/render, $(DATASETS))
+RNDR_GREEDY_LOOKAHEAD_SEP_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/greedy-lookahead-sep/untangled/render, $(DATASETS))
 
 EVAL_HILLC := $(patsubst %, $(RESULTS_DIR)/%/hillc/raw/res.json, $(DATASETS))
 EVAL_HILLC_SEP := $(patsubst %, $(RESULTS_DIR)/%/hillc-sep/raw/res.json, $(DATASETS))
@@ -126,12 +148,26 @@ EVAL_HILLC_SEP_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/hillc-sep/pruned/res.jso
 EVAL_HILLC_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/hillc/untangled/res.json, $(DATASETS))
 EVAL_HILLC_SEP_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/hillc-sep/untangled/res.json, $(DATASETS))
 
+RNDR_HILLC := $(patsubst %, $(RESULTS_DIR)/%/hillc/raw/render, $(DATASETS))
+RNDR_HILLC_SEP := $(patsubst %, $(RESULTS_DIR)/%/hillc-sep/raw/render, $(DATASETS))
+RNDR_HILLC_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/hillc/pruned/render, $(DATASETS))
+RNDR_HILLC_SEP_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/hillc-sep/pruned/render, $(DATASETS))
+RNDR_HILLC_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/hillc/untangled/render, $(DATASETS))
+RNDR_HILLC_SEP_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/hillc-sep/untangled/render, $(DATASETS))
+
 EVAL_ANNEAL := $(patsubst %, $(RESULTS_DIR)/%/anneal/raw/res.json, $(DATASETS))
 EVAL_ANNEAL_SEP := $(patsubst %, $(RESULTS_DIR)/%/anneal-sep/raw/res.json, $(DATASETS))
 EVAL_ANNEAL_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/anneal/pruned/res.json, $(DATASETS))
 EVAL_ANNEAL_SEP_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/anneal-sep/pruned/res.json, $(DATASETS))
 EVAL_ANNEAL_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/anneal/untangled/res.json, $(DATASETS))
 EVAL_ANNEAL_SEP_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/anneal-sep/untangled/res.json, $(DATASETS))
+
+RNDR_ANNEAL := $(patsubst %, $(RESULTS_DIR)/%/anneal/raw/render, $(DATASETS))
+RNDR_ANNEAL_SEP := $(patsubst %, $(RESULTS_DIR)/%/anneal-sep/raw/render, $(DATASETS))
+RNDR_ANNEAL_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/anneal/pruned/render, $(DATASETS))
+RNDR_ANNEAL_SEP_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/anneal-sep/pruned/render, $(DATASETS))
+RNDR_ANNEAL_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/anneal/untangled/render, $(DATASETS))
+RNDR_ANNEAL_SEP_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/anneal-sep/untangled/render, $(DATASETS))
 
 EVAL_HILLC_RANDOM := $(patsubst %, $(RESULTS_DIR)/%/hillc-random/raw/res.json, $(DATASETS))
 EVAL_HILLC_RANDOM_SEP := $(patsubst %, $(RESULTS_DIR)/%/hillc-random-sep/raw/res.json, $(DATASETS))
@@ -140,6 +176,13 @@ EVAL_HILLC_RANDOM_SEP_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/hillc-random-sep/
 EVAL_HILLC_RANDOM_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/hillc-random/untangled/res.json, $(DATASETS))
 EVAL_HILLC_RANDOM_SEP_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/hillc-random-sep/untangled/res.json, $(DATASETS))
 
+RNDR_HILLC_RANDOM := $(patsubst %, $(RESULTS_DIR)/%/hillc-random/raw/render, $(DATASETS))
+RNDR_HILLC_RANDOM_SEP := $(patsubst %, $(RESULTS_DIR)/%/hillc-random-sep/raw/render, $(DATASETS))
+RNDR_HILLC_RANDOM_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/hillc-random/pruned/render, $(DATASETS))
+RNDR_HILLC_RANDOM_SEP_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/hillc-random-sep/pruned/render, $(DATASETS))
+RNDR_HILLC_RANDOM_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/hillc-random/untangled/render, $(DATASETS))
+RNDR_HILLC_RANDOM_SEP_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/hillc-random-sep/untangled/render, $(DATASETS))
+
 EVAL_ANNEAL_RANDOM := $(patsubst %, $(RESULTS_DIR)/%/anneal-random/raw/res.json, $(DATASETS))
 EVAL_ANNEAL_RANDOM_SEP := $(patsubst %, $(RESULTS_DIR)/%/anneal-random-sep/raw/res.json, $(DATASETS))
 EVAL_ANNEAL_RANDOM_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/anneal-random/pruned/res.json, $(DATASETS))
@@ -147,11 +190,20 @@ EVAL_ANNEAL_RANDOM_SEP_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/anneal-random-se
 EVAL_ANNEAL_RANDOM_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/anneal-random/untangled/res.json, $(DATASETS))
 EVAL_ANNEAL_RANDOM_SEP_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/anneal-random-sep/untangled/res.json, $(DATASETS))
 
+RNDR_ANNEAL_RANDOM := $(patsubst %, $(RESULTS_DIR)/%/anneal-random/raw/render, $(DATASETS))
+RNDR_ANNEAL_RANDOM_SEP := $(patsubst %, $(RESULTS_DIR)/%/anneal-random-sep/raw/render, $(DATASETS))
+RNDR_ANNEAL_RANDOM_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/anneal-random/pruned/render, $(DATASETS))
+RNDR_ANNEAL_RANDOM_SEP_PRUNED := $(patsubst %, $(RESULTS_DIR)/%/anneal-random-sep/pruned/render, $(DATASETS))
+RNDR_ANNEAL_RANDOM_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/anneal-random/untangled/render, $(DATASETS))
+RNDR_ANNEAL_RANDOM_SEP_UNTANGLED := $(patsubst %, $(RESULTS_DIR)/%/anneal-random-sep/untangled/render, $(DATASETS))
+
 .PHONY: tables ilp-baseline ilp greedy greedy-lookahead hillc anneal hillc-random anneal-random help clean
 
 .SECONDARY:
 
 tables: $(TABLES_DIR)/tbl-approx-comp-avg.pdf $(TABLES_DIR)/tbl-untangling-approx.pdf $(TABLES_DIR)/tbl-untangling-ilp.pdf $(TABLES_DIR)/tbl-untangling-graph-size.pdf $(TABLES_DIR)/tbl-ilp-comp.pdf $(TABLES_DIR)/tbl-approx-comp.pdf $(TABLES_DIR)/tbl-main-res-approx-error.pdf $(TABLES_DIR)/tbl-main-res-time.pdf $(TABLES_DIR)/tbl-dataset-overview.pdf
+
+render:  $(RNDR_HILLC) $(RNDR_HILLC_SEP) $(RNDR_HILLC_PRUNED) $(RNDR_HILLC_SEP_PRUNED) $(RNDR_HILLC_UNTANGLED) $(RNDR_HILLC_SEP_UNTANGLED) $(RNDR_ILP_CBC) $(RNDR_ILP_CBC_SEP) $(RNDR_ILP_CBC_PRUNED) $(RNDR_ILP_CBC_SEP_PRUNED) $(RNDR_ILP_CBC_UNTANGLED) $(RNDR_ILP_CBC_SEP_UNTANGLED) $(RNDR_GREEDY) $(RNDR_GREEDY_SEP) $(RNDR_GREEDY_PRUNED) $(RNDR_GREEDY_SEP_PRUNED) $(RNDR_GREEDY_UNTANGLED) $(RNDR_GREEDY_SEP_UNTANGLED) $(RNDR_GREEDY_LOOKAHEAD) $(RNDR_GREEDY_LOOKAHEAD_SEP) $(RNDR_GREEDY_LOOKAHEAD_PRUNED) $(RNDR_GREEDY_LOOKAHEAD_SEP_PRUNED) $(RNDR_GREEDY_LOOKAHEAD_UNTANGLED) $(RNDR_GREEDY_LOOKAHEAD_SEP_UNTANGLED) $(RNDR_ANNEAL) $(RNDR_ANNEAL_SEP) $(RNDR_ANNEAL_PRUNED) $(RNDR_ANNEAL_SEP_PRUNED) $(RNDR_ANNEAL_UNTANGLED) $(RNDR_ANNEAL_SEP_UNTANGLED) $(RNDR_ANNEAL_RANDOM) $(RNDR_ANNEAL_RANDOM_SEP) $(RNDR_ANNEAL_RANDOM_PRUNED) $(RNDR_ANNEAL_RANDOM_SEP_PRUNED) $(RNDR_ANNEAL_RANDOM_UNTANGLED) $(RNDR_ANNEAL_RANDOM_SEP_UNTANGLED) $(RNDR_HILLC_RANDOM) $(RNDR_HILLC_RANDOM_SEP) $(RNDR_HILLC_RANDOM_PRUNED) $(RNDR_HILLC_RANDOM_SEP_PRUNED) $(RNDR_HILLC_RANDOM_UNTANGLED) $(RNDR_HILLC_RANDOM_SEP_UNTANGLED)
 
 list:
 	@echo $(DATASETS) | tr ' ' '\n'
@@ -912,6 +964,28 @@ $(RESULTS_DIR)/%/hillc-sep/untangled/res.json: datasets/%.json
 
 	@printf "[%s] Done.\n" "$$(date -Is)"
 
+$(RESULTS_DIR)/%/render: $(RESULTS_DIR)/%/res.json
+	@printf "[%s] Rendering $@.\n" "$$(date -Is)"
+	@mkdir -p $(RESULTS_DIR)/$*/render
+	@cat $< | $(TRANSITMAP) --line-width=100 --line-spacing=50 > $@/1.svg
+	@cp $@/1.svg $@/2.svg
+	@cp $@/1.svg $@/3.svg
+	@cp $@/1.svg $@/4.svg
+	@cp $@/1.svg $@/5.svg
+	@cp $@/1.svg $@/6.svg
+	@cp $@/1.svg $@/7.svg
+	@cp $@/1.svg $@/8.svg
+	@cp $@/1.svg $@/9.svg
+	@cp $@/1.svg $@/10.svg
+	@cp $@/1.svg $@/11.svg
+	@cp $@/1.svg $@/12.svg
+	@cat $< | $(TRANSITMAP) --line-width=60 --line-spacing=30 --line-label-textsize 180 --station-label-textsize 220  -l --no-deg2-labels > $@/13.svg
+	@cat $< | $(TRANSITMAP) --line-width=35 --line-spacing=17 --line-label-textsize 100 --station-label-textsize 120 -l > $@/14.svg
+	@cat $< | $(TRANSITMAP) --line-width=20 --line-spacing=10 --line-label-textsize 50 --station-label-textsize 60 -l > $@/15.svg
+	@cat $< | $(TRANSITMAP) --line-width=10 --line-spacing=6 --line-label-textsize 25  --station-label-textsize 30 -l > $@/16.svg
+	@cat $< | $(TRANSITMAP) --line-width=4 --line-spacing=4 --line-label-textsize 12   --station-label-textsize 15 -l > $@/17.svg
+	@cat $< | $(TRANSITMAP) --line-width=20 --line-spacing=10 --line-label-textsize 50 --station-label-textsize 60 -l > $@/full.svg
+	@inkscape $@/full.svg --export-area-drawing --export-type=pdf --export-filename=$@/full.pdf
 
 # targets
 
@@ -1038,6 +1112,9 @@ $(TABLES_DIR)/tbl-approx-comp-avg.pdf: $(TABLES_DIR)/tbl-approx-comp-avg.tex
 	@echo "\\\end{document}" >> $(TABLES_DIR)/tmp
 	@pdflatex -output-directory=$(TABLES_DIR) -jobname=tbl-approx-comp-avg $(TABLES_DIR)/tmp > /dev/null
 	@rm $(TABLES_DIR)/tmp
+
+http: render
+	@python3 -m http.server
 
 help:
 	cat README.md

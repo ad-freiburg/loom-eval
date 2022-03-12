@@ -3,37 +3,14 @@
 // Author: Patrick Brosi <brosi@informatik.uni-freiburg.de>
 
 var networks = [
-  {
-    'id' : 'turin',
-    'name' : "Turin (Tram)",
-  },
- {
-    'id' : 'freiburg',
-    'name' : "Freiburg (Stadtbahn)",
-  },
-  {
-    'id' : 'nyc_subway',
-    'name' : "New York (Subway)",
-  },
-  {
-    'id' : 'chicago',
-    'name' : "Chicago (\"L\" train)",
-  },
-  {
-    'id' : 'stuttgart',
-    'name' : "Stuttgart (Stadtbahn)",
-  },
-  {
-    'id' : 'sydney',
-    'name' : "Sydney (Light rail)",
-  },
-  {
-    'id' : 'dallas',
-    'name' : "Dallas (Light rail)",
-  }
+  {"id":"turin","name":"Turin (Tram)","bounds":[[44.972898,7.387699],[45.421676,7.825031]]},
+  {"id":"freiburg","name":"Freiburg (Stadtbahn)","bounds":[[47.963754,7.786318],[48.03588,7.896592]]},
+  {"id":"nyc_subway","name":"New York (Subway)","bounds":[[40.510988,-74.254297],[40.90489,-73.752195]]},
+  {"id":"chicago","name":"Chicago (\"L\" train)","bounds":[[41.720955,-87.906127],[42.074566,-87.603802]]},
+  {"id":"stuttgart","name":"Stuttgart (Stadtbahn)","bounds":[[48.696459,9.061769],[48.875005,9.299399]]},
+  {"id":"sydney","name":"Sydney (Light rail)","bounds":[[-34.135709,150.670375],[-33.597455,151.25056]]},
+  {"id":"dallas","name":"Dallas (Light rail)","bounds":[[32.682006,-97.329609],[33.034948,-96.559026]]}
 ];
-
-var attr = '';
 
 var map = L.map('map').setView([48.7792, 9.1788], 15);
     var datasetLayer, resLayer;
@@ -51,28 +28,13 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 for (var n in networks) {
   var net = networks[n];
 
-  var svgElement;
-  xhr = new XMLHttpRequest();
-  method = "hillc";
-  simpl = "raw";
-  xhr.open("GET","../results/" + net["id"] + "/" + method + "/" + simpl + "/render/" + "16.svg",false);
-  (function(xhr, net) {
-    xhr.onload = function(e) {
-      var e = xhr.responseXML.documentElement;
-
-      var ll = e.getAttribute("latlng-box").split(",");
-      net['bounds'] = [[parseFloat(ll[1]), parseFloat(ll[0])], [parseFloat(ll[3]), parseFloat(ll[2])]];
-    };
-    xhr.send("");
-  })(xhr, net);
-
   $("#layerlist")
     .append('<li class="" id="layer-' + net['id'] + '">' +
       '<div class="flink">' +
         '' + net['name'] + '' +
         '<div class="buttons-row">' +
-          '<a target="_blank" href="../datasets/' + net['id'] + '.json" type="button" class="btn btn-default btn-xs">GRAPH</a>' +
-          '<a target="_blank" href="../results/' + net['id'] + '/ilp-sep-cbc/untangled/render/full.pdf" type="button" class="btn btn-default btn-xs">PDF</a>' +
+          '<a target="_blank" href="/datasets/' + net['id'] + '.json" type="button" class="btn btn-default btn-xs">GRAPH</a>' +
+          '<a target="_blank" href="/results/' + net['id'] + '/ilp-sep-cbc/untangled/render/full.pdf" type="button" class="btn btn-default btn-xs">PDF</a>' +
         '</div>' +
       '</div>' +
     '</li>'
@@ -84,7 +46,6 @@ function update() {
 
   var mid = document.getElementById("optmethod").value + "-" +  document.getElementById("simplmethod").value;
   if (document.getElementById("check-sep").checked) mid += "-sep";
-
 
   for (var n in networks) {
     if (!networks[n]['layers']) networks[n]['layers'] = {};
@@ -119,7 +80,7 @@ function update() {
       networks[n]['layers'][mid][z].addTo(map);
     } else {
       xhr = new XMLHttpRequest();
-      xhr.open("GET","../results/" + net["id"] + "/" + document.getElementById("optmethod").value + (document.getElementById("check-sep").checked ? "-sep" : "") + (document.getElementById("optmethod").value == "ilp" ? "-cbc" : "") + "/" + document.getElementById("simplmethod").value  + "/render/" + z + ".svg",false);
+      xhr.open("GET","/results/" + net["id"] + "/" + document.getElementById("optmethod").value + (document.getElementById("check-sep").checked ? "-sep" : "") + (document.getElementById("optmethod").value == "ilp" ? "-cbc" : "") + "/" + document.getElementById("simplmethod").value  + "/render/" + z + ".svg",false);
       (function(xhr, net) {
         xhr.onload = function(e) {
           if (!xhr.responseXML) {

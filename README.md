@@ -28,7 +28,7 @@ The following targets are provided:
 
 **`render`**: Render examples for web app
 
-**`http`**: Start HTTP server for web app at http://localhost:8000/web
+**`http`**: Start HTTP server for web app at http://localhost:8000
 
 For additional targets, see the Makefile itself.
 

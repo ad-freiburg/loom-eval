@@ -43,9 +43,12 @@ ENV GRB_LICENSE_FILE /output/gurobi.lic
 RUN cd /loom && rm -rf build && mkdir build && cd build && cmake .. && make -j20 loom && make -j20 transitmap
 
 RUN mkdir -p /output
+RUN ln -s /output/results /results
 
 COPY Makefile /
 COPY README.md /
+COPY index.html /
+ADD web /web
 ADD script /script
 ADD datasets /datasets
 

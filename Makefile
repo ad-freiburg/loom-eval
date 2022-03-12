@@ -985,7 +985,7 @@ $(RESULTS_DIR)/%/render: $(RESULTS_DIR)/%/res.json
 	@cat $< | $(TRANSITMAP) --line-width=10 --line-spacing=6 --line-label-textsize 25  --station-label-textsize 30 -l > $@/16.svg
 	@cat $< | $(TRANSITMAP) --line-width=4 --line-spacing=4 --line-label-textsize 12   --station-label-textsize 15 -l > $@/17.svg
 	@cat $< | $(TRANSITMAP) --line-width=20 --line-spacing=10 --line-label-textsize 50 --station-label-textsize 60 -l > $@/full.svg
-	@inkscape $@/full.svg --export-area-drawing --export-type=pdf --export-filename=$@/full.pdf
+	@inkscape --file=$@/full.svg --export-area-drawing --without-gui --export-pdf=$@/full.pdf
 
 # targets
 

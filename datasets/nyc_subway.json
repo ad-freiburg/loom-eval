@@ -654,16 +654,16 @@
         "type": "Point"
       },
       "properties": {
-        "excluded_line_conns": [
+        "excluded_conn": [
           {
-            "edge1_node": "0x5b45070",
-            "edge2_node": "0x5b5e9d0",
-            "route": "0x1133420"
+            "node_from": "0x5b45070",
+            "node_to": "0x5b5e9d0",
+            "line": "0x1133420"
           },
           {
-            "edge1_node": "0x5b5e9d0",
-            "edge2_node": "0x5b45070",
-            "route": "0x1133420"
+            "node_from": "0x5b5e9d0",
+            "node_to": "0x5b45070",
+            "line": "0x1133420"
           }
         ],
         "id": "0x5b453b0",
@@ -1519,16 +1519,16 @@
         "type": "Point"
       },
       "properties": {
-        "excluded_line_conns": [
+        "excluded_conn": [
           {
-            "edge1_node": "0x5d240d0",
-            "edge2_node": "0x5ca91d0",
-            "route": "0x11317b0"
+            "node_from": "0x5d240d0",
+            "node_to": "0x5ca91d0",
+            "line": "0x11317b0"
           },
           {
-            "edge1_node": "0x5ca91d0",
-            "edge2_node": "0x5d240d0",
-            "route": "0x11317b0"
+            "node_from": "0x5ca91d0",
+            "node_to": "0x5d240d0",
+            "line": "0x11317b0"
           }
         ],
         "id": "0x5b6f2e0"
@@ -6221,16 +6221,16 @@
         "type": "Point"
       },
       "properties": {
-        "excluded_line_conns": [
+        "excluded_conn": [
           {
-            "edge1_node": "0x5ca70b0",
-            "edge2_node": "0x5c65cc0",
-            "route": "0x1131bd0"
+            "node_from": "0x5ca70b0",
+            "node_to": "0x5c65cc0",
+            "line": "0x1131bd0"
           },
           {
-            "edge1_node": "0x5c65cc0",
-            "edge2_node": "0x5ca70b0",
-            "route": "0x1131bd0"
+            "node_from": "0x5c65cc0",
+            "node_to": "0x5ca70b0",
+            "line": "0x1131bd0"
           }
         ],
         "id": "0x5cd25c0"
@@ -7301,26 +7301,26 @@
         "type": "Point"
       },
       "properties": {
-        "excluded_line_conns": [
+        "excluded_conn": [
           {
-            "edge1_node": "0x5c81070",
-            "edge2_node": "0x5ca10b0",
-            "route": "0x112fd40"
+            "node_from": "0x5c81070",
+            "node_to": "0x5ca10b0",
+            "line": "0x112fd40"
           },
           {
-            "edge1_node": "0x5c81070",
-            "edge2_node": "0x5ca10b0",
-            "route": "0x1130090"
+            "node_from": "0x5c81070",
+            "node_to": "0x5ca10b0",
+            "line": "0x1130090"
           },
           {
-            "edge1_node": "0x5ca10b0",
-            "edge2_node": "0x5c81070",
-            "route": "0x112fd40"
+            "node_from": "0x5ca10b0",
+            "node_to": "0x5c81070",
+            "line": "0x112fd40"
           },
           {
-            "edge1_node": "0x5ca10b0",
-            "edge2_node": "0x5c81070",
-            "route": "0x1130090"
+            "node_from": "0x5ca10b0",
+            "node_to": "0x5c81070",
+            "line": "0x1130090"
           }
         ],
         "id": "0x5f097f0"
@@ -7349,16 +7349,16 @@
         "type": "Point"
       },
       "properties": {
-        "excluded_line_conns": [
+        "excluded_conn": [
           {
-            "edge1_node": "0x5caa8c0",
-            "edge2_node": "0x5c8b510",
-            "route": "0x11317b0"
+            "node_from": "0x5caa8c0",
+            "node_to": "0x5c8b510",
+            "line": "0x11317b0"
           },
           {
-            "edge1_node": "0x5c8b510",
-            "edge2_node": "0x5caa8c0",
-            "route": "0x11317b0"
+            "node_from": "0x5c8b510",
+            "node_to": "0x5caa8c0",
+            "line": "0x11317b0"
           }
         ],
         "id": "0x5f11b50"
@@ -7374,16 +7374,16 @@
         "type": "Point"
       },
       "properties": {
-        "excluded_line_conns": [
+        "excluded_conn": [
           {
-            "edge1_node": "0x5b47f80",
-            "edge2_node": "0x600b550",
-            "route": "0x1131bd0"
+            "node_from": "0x5b47f80",
+            "node_to": "0x600b550",
+            "line": "0x1131bd0"
           },
           {
-            "edge1_node": "0x600b550",
-            "edge2_node": "0x5b47f80",
-            "route": "0x1131bd0"
+            "node_from": "0x600b550",
+            "node_to": "0x5b47f80",
+            "line": "0x1131bd0"
           }
         ],
         "id": "0x5f1a3d0"
@@ -7464,16 +7464,16 @@
         "type": "Point"
       },
       "properties": {
-        "excluded_line_conns": [
+        "excluded_conn": [
           {
-            "edge1_node": "0x5f1a3d0",
-            "edge2_node": "0x5b48210",
-            "route": "0x1131bd0"
+            "node_from": "0x5f1a3d0",
+            "node_to": "0x5b48210",
+            "line": "0x1131bd0"
           },
           {
-            "edge1_node": "0x5b48210",
-            "edge2_node": "0x5f1a3d0",
-            "route": "0x1131bd0"
+            "node_from": "0x5b48210",
+            "node_to": "0x5f1a3d0",
+            "line": "0x1131bd0"
           }
         ],
         "id": "0x600b550"
@@ -7606,16 +7606,16 @@
         "type": "Point"
       },
       "properties": {
-        "excluded_line_conns": [
+        "excluded_conn": [
           {
-            "edge1_node": "0x5b23ba0",
-            "edge2_node": "0x63e4b80",
-            "route": "0x1132750"
+            "node_from": "0x5b23ba0",
+            "node_to": "0x63e4b80",
+            "line": "0x1132750"
           },
           {
-            "edge1_node": "0x63e4b80",
-            "edge2_node": "0x5b23ba0",
-            "route": "0x1132750"
+            "node_from": "0x63e4b80",
+            "node_to": "0x5b23ba0",
+            "line": "0x1132750"
           }
         ],
         "id": "0x63b28c0"
@@ -7644,16 +7644,16 @@
         "type": "Point"
       },
       "properties": {
-        "excluded_line_conns": [
+        "excluded_conn": [
           {
-            "edge1_node": "0x5c76f90",
-            "edge2_node": "0x5cd37a0",
-            "route": "0x1130090"
+            "node_from": "0x5c76f90",
+            "node_to": "0x5cd37a0",
+            "line": "0x1130090"
           },
           {
-            "edge1_node": "0x5cd37a0",
-            "edge2_node": "0x5c76f90",
-            "route": "0x1130090"
+            "node_from": "0x5cd37a0",
+            "node_to": "0x5c76f90",
+            "line": "0x1130090"
           }
         ],
         "id": "0x64a3760"

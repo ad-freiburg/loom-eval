@@ -39,16 +39,16 @@
         "type": "Point"
       },
       "properties": {
-        "excluded_line_conns": [
+        "excluded_conn": [
           {
-            "edge1_node": "0x9a6c7b0",
-            "edge2_node": "0x195a810",
-            "route": "0x1d9a1e0"
+            "node_from": "0x9a6c7b0",
+            "node_to": "0x195a810",
+            "line": "0x1d9a1e0"
           },
           {
-            "edge1_node": "0x195a810",
-            "edge2_node": "0x9a6c7b0",
-            "route": "0x1d9a1e0"
+            "node_from": "0x195a810",
+            "node_to": "0x9a6c7b0",
+            "line": "0x1d9a1e0"
           }
         ],
         "id": "0x195a4a0",
@@ -276,16 +276,16 @@
         "type": "Point"
       },
       "properties": {
-        "excluded_line_conns": [
+        "excluded_conn": [
           {
-            "edge1_node": "0x9a68b50",
-            "edge2_node": "0x9a6a8a0",
-            "route": "0x1d9a1e0"
+            "node_from": "0x9a68b50",
+            "node_to": "0x9a6a8a0",
+            "line": "0x1d9a1e0"
           },
           {
-            "edge1_node": "0x9a6a8a0",
-            "edge2_node": "0x9a68b50",
-            "route": "0x1d9a1e0"
+            "node_from": "0x9a6a8a0",
+            "node_to": "0x9a68b50",
+            "line": "0x1d9a1e0"
           }
         ],
         "id": "0x9a68850",
@@ -393,16 +393,16 @@
         "type": "Point"
       },
       "properties": {
-        "excluded_line_conns": [
+        "excluded_conn": [
           {
-            "edge1_node": "0x9a69fc0",
-            "edge2_node": "0x9a69a90",
-            "route": "0x1d9a1e0"
+            "node_from": "0x9a69fc0",
+            "node_to": "0x9a69a90",
+            "line": "0x1d9a1e0"
           },
           {
-            "edge1_node": "0x9a69a90",
-            "edge2_node": "0x9a69fc0",
-            "route": "0x1d9a1e0"
+            "node_from": "0x9a69a90",
+            "node_to": "0x9a69fc0",
+            "line": "0x1d9a1e0"
           }
         ],
         "id": "0x9a69e20",
@@ -1704,16 +1704,16 @@
         "type": "Point"
       },
       "properties": {
-        "excluded_line_conns": [
+        "excluded_conn": [
           {
-            "edge1_node": "0x9a66d60",
-            "edge2_node": "0x9a6de20",
-            "route": "0x1d9a1e0"
+            "node_from": "0x9a66d60",
+            "node_to": "0x9a6de20",
+            "line": "0x1d9a1e0"
           },
           {
-            "edge1_node": "0x9a6de20",
-            "edge2_node": "0x9a66d60",
-            "route": "0x1d9a1e0"
+            "node_from": "0x9a6de20",
+            "node_to": "0x9a66d60",
+            "line": "0x1d9a1e0"
           }
         ],
         "id": "0x9aa98d0"
@@ -1755,36 +1755,36 @@
         "type": "Point"
       },
       "properties": {
-        "excluded_line_conns": [
+        "excluded_conn": [
           {
-            "edge1_node": "0x9a81c80",
-            "edge2_node": "0x9a70250",
-            "route": "0x1d9b830"
+            "node_from": "0x9a81c80",
+            "node_to": "0x9a70250",
+            "line": "0x1d9b830"
           },
           {
-            "edge1_node": "0x9a81c80",
-            "edge2_node": "0x9a70250",
-            "route": "0x1d9bbc0"
+            "node_from": "0x9a81c80",
+            "node_to": "0x9a70250",
+            "line": "0x1d9bbc0"
           },
           {
-            "edge1_node": "0x9a81c80",
-            "edge2_node": "0x9a70250",
-            "route": "0x1d9ba90"
+            "node_from": "0x9a81c80",
+            "node_to": "0x9a70250",
+            "line": "0x1d9ba90"
           },
           {
-            "edge1_node": "0x9a70250",
-            "edge2_node": "0x9a81c80",
-            "route": "0x1d9ba90"
+            "node_from": "0x9a70250",
+            "node_to": "0x9a81c80",
+            "line": "0x1d9ba90"
           },
           {
-            "edge1_node": "0x9a70250",
-            "edge2_node": "0x9a81c80",
-            "route": "0x1d9bbc0"
+            "node_from": "0x9a70250",
+            "node_to": "0x9a81c80",
+            "line": "0x1d9bbc0"
           },
           {
-            "edge1_node": "0x9a70250",
-            "edge2_node": "0x9a81c80",
-            "route": "0x1d9b830"
+            "node_from": "0x9a70250",
+            "node_to": "0x9a81c80",
+            "line": "0x1d9b830"
           }
         ],
         "id": "0x9af1d20"
@@ -1813,16 +1813,16 @@
         "type": "Point"
       },
       "properties": {
-        "excluded_line_conns": [
+        "excluded_conn": [
           {
-            "edge1_node": "0x9a8ce60",
-            "edge2_node": "0x9a7a9e0",
-            "route": "0x1d9b960"
+            "node_from": "0x9a8ce60",
+            "node_to": "0x9a7a9e0",
+            "line": "0x1d9b960"
           },
           {
-            "edge1_node": "0x9a7a9e0",
-            "edge2_node": "0x9a8ce60",
-            "route": "0x1d9b960"
+            "node_from": "0x9a7a9e0",
+            "node_to": "0x9a8ce60",
+            "line": "0x1d9b960"
           }
         ],
         "id": "0x9b794b0"

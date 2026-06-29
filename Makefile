@@ -1116,6 +1116,9 @@ $(TABLES_DIR)/tbl-approx-comp-avg.pdf: $(TABLES_DIR)/tbl-approx-comp-avg.tex
 http: render
 	@python3 -m http.server
 
+http_only: 
+	@python3 -m http.server
+
 help:
 	cat README.md
 

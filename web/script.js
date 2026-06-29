@@ -15,15 +15,11 @@ var networks = [
 var map = L.map('map').setView([48.7792, 9.1788], 15);
     var datasetLayer, resLayer;
 
-L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-  maxZoom: 17,
-  attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
-    'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-  id: 'mapbox/light-v9',
-  tileSize: 512,
-  zoomOffset: -1
-}).addTo(map);
-
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a rel="noreferrer" target="_blank" href="#">OpenStreetMap</a>',
+                maxZoom: 17,
+                opacity:0.9
+            }).addTo(map);
 
 for (var n in networks) {
   var net = networks[n];
